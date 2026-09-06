@@ -1,0 +1,17 @@
+# LLM 클라이언트
+anthropic>=0.40.0   # 멍거(길드마스터) 최종 종합 판단용 - 유료
+# Gemini(7명 분석가용)는 별도 SDK 없이 requests로 REST API를 직접 호출한다.
+# (google-generativeai가 끌고 오는 grpcio/cryptography가 Windows ARM64 등에서
+#  사전 빌드된 wheel이 없어 설치가 깨지는 경우가 많아서 의도적으로 제외했다)
+
+# 시세/재무 데이터 (무료, API 키 불필요)
+yfinance>=0.2.40
+
+# 뉴스 (무료 RSS, API 키 불필요)
+feedparser>=6.0.11
+
+# Gemini REST 호출 + 텔레그램 알림
+requests>=2.32.0
+
+# 환경변수 관리
+python-dotenv>=1.0.1
