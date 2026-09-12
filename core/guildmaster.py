@@ -109,7 +109,8 @@ def deliberate(
         f"리스크 거부권 발동 여부: {'예 (탈레브 위험경고)' if risk_veto else '아니오'}\n"
         f"최종 신호: {signal}"
         + (f" (강도: {strength}, 포지션 비중: {position_pct*100:.0f}%)" if signal != "관망" else "")
-        + "\n\n위 결과가 왜 이렇게 나왔는지 포테이토에게 3~5문장으로 브리핑하세요."
+        + "\n\n위 결과가 왜 이렇게 나왔는지 포테이토에게 브리핑하세요. "
+        "반드시 4~6문장 이내, 마크다운 기호(#, **, - 등) 없이 순수 텍스트로만 답하세요."
     )
     verdict.briefing = call_claude_guildmaster(GUILDMASTER["system_prompt"], user_prompt)
     return verdict
