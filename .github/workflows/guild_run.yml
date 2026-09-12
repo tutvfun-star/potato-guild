@@ -1,5 +1,11 @@
 name: 포테이토 길드 정기 소집
 
+# Actions가 실행 결과(계좌 상태, 회고 기록)를 저장소에 다시 커밋(push)할 수 있으려면
+# 명시적으로 쓰기 권한을 줘야 한다. 이게 없으면 기본 GITHUB_TOKEN이 읽기 전용으로 동작해서
+# "Permission to .../....git denied to github-actions[bot]" (403) 오류가 난다.
+permissions:
+  contents: write
+
 on:
   schedule:
     # UTC 기준 06:30 = 한국시간 15:30 (장 마감 후). 필요하면 자유롭게 수정하세요.
