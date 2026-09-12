@@ -39,6 +39,6 @@ jobs:
         run: |
           git config user.name "potato-guild-bot"
           git config user.email "actions@github.com"
-          git add data/portfolio.json
+          git add data/portfolio.json data/memory.json
           git diff --cached --quiet || git commit -m "포테이토 계좌 갱신 [skip ci]"
           git push

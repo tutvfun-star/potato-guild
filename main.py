@@ -14,9 +14,10 @@ import sys
 
 from dotenv import load_dotenv
 
-from core.analysts import run_all_analysts
+from core.analysts import run_all_analysts, run_bull_bear_debate
 from core.data_fetch import fetch_snapshot, snapshot_to_context
 from core.guildmaster import deliberate
+from core.memory import build_reflection, load_memory, record_decision, save_memory
 from core.notify import build_report_message, send_telegram
 from core.potato import execute, load_portfolio, performance_summary, save_portfolio
 
@@ -31,13 +32,25 @@ def run_cycle(ticker: str) -> None:
     context = snapshot_to_context(snap)
     print(context)
 
+    memory = load_memory()
+    reflection = build_reflection(memory, ticker, snap.price)
+    if reflection:
+        print(f"\n[과거 판단 회고] {reflection}")
+
     print("\n2) 7명의 전문가 소집 중 (Gemini)...")
     analyst_results = run_all_analysts(context)
     for r in analyst_results:
         print(f"   {r['emoji']} {r['display_name']}: {r['opinion']}(확신도 {r['confidence']}) - {r['reason']}")
 
+    print("\n2.5) 강세(린치) vs 약세(버리) 토론 중...")
+    analyst_results = run_bull_bear_debate(context, analyst_results)
+    for key in ("lynch", "burry"):
+        r = next((x for x in analyst_results if x["key"] == key), None)
+        if r:
+            print(f"   (토론 후) {r['emoji']} {r['display_name']}: {r['opinion']}(확신도 {r['confidence']}) - {r['reason']}")
+
     print("\n3) 멍거 종합 판단 중 (Claude)...")
-    verdict = deliberate(ticker, context, analyst_results)
+    verdict = deliberate(ticker, context, analyst_results, reflection=reflection)
     print(f"   종합 스코어: {verdict.score} / 신호: {verdict.signal}")
     print(f"   브리핑: {verdict.briefing}")
 
@@ -48,6 +61,9 @@ def run_cycle(ticker: str) -> None:
     perf = performance_summary(portfolio, price_lookup={ticker: snap.price} if snap.price else {})
     print(f"   실행 결과: {trade_result.action} {trade_result.ticker} - {trade_result.note}")
     print(f"   계좌 현황: {perf}")
+
+    record_decision(memory, ticker, verdict.signal, verdict.score, snap.price)
+    save_memory(memory)
 
     print("\n5) 알림 발송 중...")
     message = build_report_message(verdict, trade_result, perf)

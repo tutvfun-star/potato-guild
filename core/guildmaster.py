@@ -63,7 +63,12 @@ def _strength_and_sizing(abs_score: int) -> tuple[str, float]:
     return "약함", SIZING_TABLE["약함"]
 
 
-def deliberate(ticker: str, context: str, analyst_results: list[dict]) -> GuildVerdict:
+def deliberate(
+    ticker: str,
+    context: str,
+    analyst_results: list[dict],
+    reflection: str | None = None,
+) -> GuildVerdict:
     score = _compute_score(analyst_results)
     risk_veto = _check_risk_veto(analyst_results)
 
@@ -94,9 +99,11 @@ def deliberate(ticker: str, context: str, analyst_results: list[dict]) -> GuildV
         f"(확신도 {r['confidence']}) - {r['reason']}"
         for r in analyst_results
     )
+    reflection_section = f"[과거 판단 회고]\n{reflection}\n\n" if reflection else ""
     user_prompt = (
         f"[분석 대상]\n{context}\n\n"
         f"[7인 전문가 의견]\n{opinions_text}\n\n"
+        f"{reflection_section}"
         f"[코드로 이미 계산된 결과]\n"
         f"종합 스코어: {score}\n"
         f"리스크 거부권 발동 여부: {'예 (탈레브 위험경고)' if risk_veto else '아니오'}\n"

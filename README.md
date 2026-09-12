@@ -39,6 +39,22 @@
 - 동시 보유 **최대 5종목** (분산 강제), 항상 자산의 **20% 이상 현금 유지**
 - 매도 신호가 뜨면 보유 물량 전량 청산 (초보자 기준 단순화)
 
+## 오픈소스에서 참고한 기법 (TauricResearch/TradingAgents)
+
+캐릭터를 "학습"시킨다는 건 모델 자체를 재훈련(파인튜닝)하는 게 아니라, 검증된 오픈소스
+멀티 에이전트 트레이딩 프레임워크의 **설계 기법을 프롬프트/로직에 반영**하는 방식입니다.
+TauricResearch/TradingAgents를 참고해 아래 3가지를 추가했습니다.
+
+1. **데이터 근거 강제** (`config/personas.py`) — 모든 캐릭터의 프롬프트에 "주어진 데이터에
+   없는 내용은 지어내지 마라"는 문구를 추가해 할루시네이션을 줄였습니다.
+2. **강세/약세 구조화된 토론** (`core/analysts.py`의 `run_bull_bear_debate`) — 피터 린치(강세)와
+   마이클 버리(약세)가 1차 의견을 먼저 낸 뒤, 서로의 주장을 보고 한 번 반박/재판단하는 토론
+   라운드를 거칩니다. Gemini 호출이 종목당 7회 → 9회로 늘지만 여전히 무료입니다.
+3. **회고(reflection) 메모리** (`core/memory.py`, `data/memory.json`) — 같은 종목에 대한 과거
+   매수/매도 판단이 실제로 맞았는지(가격 변동으로) 코드가 계산해서, 다음 판단 때 멍거에게
+   참고 자료로 전달합니다. 판단은 여전히 결정론적 코드가 하고, LLM은 그 회고를 브리핑에
+   자연스럽게 녹여내기만 합니다.
+
 ## 폴더 구조
 
 ```
@@ -47,12 +63,14 @@ potato-guild/
 ├── config/personas.py         # 9개 캐릭터 시스템 프롬프트
 ├── core/
 │   ├── data_fetch.py          # 가격/재무(yfinance)/뉴스(무료 RSS) 수집
-│   ├── llm_client.py          # Gemini/Claude 호출 (모델 티어링)
-│   ├── analysts.py            # 7명 분석가 실행
-│   ├── guildmaster.py         # 점수 계산 + 리스크 거부권 + 멍거 브리핑
+│   ├── llm_client.py          # Gemini/Claude 호출 (REST 직접 호출, 모델 티어링)
+│   ├── analysts.py            # 7명 분석가 실행 + 강세/약세 구조화된 토론
+│   ├── guildmaster.py         # 점수 계산 + 리스크 거부권 + 멍거 브리핑(회고 반영)
+│   ├── memory.py              # 과거 판단 회고(reflection) 기록/계산
 │   ├── potato.py              # 모의투자 실행 엔진 (포지션 사이징/현금관리)
 │   └── notify.py              # 텔레그램 알림
 ├── data/portfolio.json        # 포테이토의 모의 계좌 상태 (자동 갱신됨)
+├── data/memory.json           # 과거 판단 회고 기록 (자동 갱신됨)
 ├── tests_manual.py            # 핵심 금융 로직 검증 스크립트
 └── .github/workflows/guild_run.yml   # 정기 자동 실행 (무료, GitHub Actions)
 ```
@@ -89,7 +107,8 @@ python main.py 005930.KS
 2. 저장소 Settings → Secrets and variables → Actions 에서 위 4개 키를 등록합니다.
 3. `.github/workflows/guild_run.yml`의 cron 스케줄과 종목 코드를 원하는 대로 수정합니다.
 4. Actions 탭 → "포테이토 길드 정기 소집" → Run workflow 로 수동 실행도 가능합니다.
-5. 실행이 끝나면 `data/portfolio.json`이 자동으로 커밋되어 계좌 상태가 저장소에 계속 누적됩니다.
+5. 실행이 끝나면 `data/portfolio.json`과 `data/memory.json`이 자동으로 커밋되어
+   계좌 상태와 판단 회고 기록이 저장소에 계속 누적됩니다.
 
 ## 다음에 손대면 좋은 부분
 

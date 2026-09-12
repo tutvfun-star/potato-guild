@@ -6,6 +6,7 @@ LLM 호출 없이 core.guildmaster / core.potato 의 순수 로직만 검증한�
 실행: python tests_manual.py
 """
 from core.guildmaster import _check_risk_veto, _compute_score, _strength_and_sizing
+from core.memory import build_reflection
 from core.potato import MAX_POSITIONS, MIN_CASH_RESERVE_RATIO, execute
 
 PASS = 0
@@ -79,6 +80,16 @@ print("\n[8] 보유하지 않은 종목에 대한 매도 신호")
 portfolio5 = {"cash": 10_000_000, "seed": 10_000_000, "positions": {}, "history": []}
 result5 = execute(portfolio5, "NOTHELD", "매도", 0.0, current_price=1000)
 check("보유하지 않은 종목 매도 신호는 '관망' 처리", result5.action == "관망")
+
+print("\n[9] 과거 판단 회고(memory) 로직")
+mem = [{"ticker": "AAPL", "date": "2026-01-01T00:00:00+00:00", "signal": "매수", "score": 10, "price": 100}]
+check("매수 후 가격 상승 -> 적중", "적중" in build_reflection(mem, "AAPL", 110))
+check("매수 후 가격 하락 -> 빗나감", "빗나감" in build_reflection(mem, "AAPL", 90))
+mem_sell = [{"ticker": "MSFT", "date": "2026-01-01T00:00:00+00:00", "signal": "매도", "score": -12, "price": 200}]
+check("매도 후 가격 하락 -> 적중", "적중" in build_reflection(mem_sell, "MSFT", 180))
+check("매도 후 가격 상승 -> 빗나감", "빗나감" in build_reflection(mem_sell, "MSFT", 220))
+check("기록 없는 종목은 회고 없음(None)", build_reflection(mem, "TSLA", 100) is None)
+check("현재가가 없으면 회고 없음(None)", build_reflection(mem, "AAPL", None) is None)
 
 print(f"\n{'='*40}\n결과: {PASS} 통과 / {FAIL} 실패\n{'='*40}")
 if FAIL:

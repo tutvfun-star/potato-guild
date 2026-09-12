@@ -91,21 +91,23 @@ def call_gemini_analyst(system_prompt: str, user_prompt: str, persona_key: str) 
     return json.loads(text)
 
 
+CLAUDE_ENDPOINT = "https://api.anthropic.com/v1/messages"
+CLAUDE_API_VERSION = "2023-06-01"
+
+
 def call_claude_guildmaster(system_prompt: str, user_prompt: str) -> str:
-    """멍거의 최종 브리핑을 Claude로 호출하고 텍스트를 반환."""
+    """멍거의 최종 브리핑을 Claude로 호출하고 텍스트를 반환.
+
+    참고: Anthropic 공식 SDK(anthropic 패키지) 대신 requests로 REST API를 직접 호출한다.
+    GitHub Actions(ubuntu-latest) 환경에서 SDK 내부 HTTP 클라이언트가
+    anthropic.APIConnectionError("Connection error.")를 반복적으로 일으키는 것이 확인되어,
+    이미 다른 곳(Gemini, 텔레그램)에서 안정적으로 동작 중인 requests 방식으로 통일했다.
+    """
     if USE_MOCK:
         return (
             "[MOCK] 멍거의 임시 브리핑입니다. 실제 ANTHROPIC_API_KEY를 설정하면 "
             "7명의 분석을 종합한 진짜 브리핑으로 교체됩니다."
         )
-
-    try:
-        import anthropic
-    except ImportError as e:
-        raise RuntimeError(
-            "anthropic 패키지가 설치되어 있지 않습니다. "
-            "pip install -r requirements.txt 를 먼저 실행하세요."
-        ) from e
 
     api_key = os.getenv("ANTHROPIC_API_KEY")
     if not api_key:
@@ -114,22 +116,27 @@ def call_claude_guildmaster(system_prompt: str, user_prompt: str) -> str:
             "테스트만 원한다면 POTATO_GUILD_MOCK=1 로 실행하세요."
         )
 
-    client = anthropic.Anthropic(api_key=api_key)
+    headers = {
+        "x-api-key": api_key,
+        "anthropic-version": CLAUDE_API_VERSION,
+        "content-type": "application/json",
+    }
+    payload = {
+        "model": "claude-sonnet-4-5",
+        "max_tokens": 500,
+        "system": system_prompt,
+        "messages": [{"role": "user", "content": user_prompt}],
+    }
 
-    last_error = None
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            message = client.messages.create(
-                model="claude-sonnet-4-5",
-                max_tokens=500,
-                system=system_prompt,
-                messages=[{"role": "user", "content": user_prompt}],
-            )
-            return message.content[0].text
-        except (anthropic.APIConnectionError, anthropic.APITimeoutError) as e:
-            last_error = e
-            if attempt < MAX_RETRIES:
-                wait = RETRY_BACKOFF_SECONDS[min(attempt - 1, len(RETRY_BACKOFF_SECONDS) - 1)]
-                print(f"   ⏳ 멍거 네트워크 오류, {wait}초 후 재시도 ({attempt}/{MAX_RETRIES}): {e}")
-                time.sleep(wait)
-    raise last_error
+    resp = _request_with_retry(
+        lambda: requests.post(CLAUDE_ENDPOINT, headers=headers, json=payload, timeout=45),
+        label="멍거(Claude)",
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"Claude API 오류 ({resp.status_code}): {resp.text[:300]}")
+
+    data = resp.json()
+    try:
+        return data["content"][0]["text"]
+    except (KeyError, IndexError) as e:
+        raise RuntimeError(f"Claude 응답 형식이 예상과 다릅니다: {data}") from e
