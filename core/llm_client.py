@@ -26,20 +26,32 @@ GEMINI_ENDPOINT = (
 USE_MOCK = os.getenv("POTATO_GUILD_MOCK", "").lower() in ("1", "true", "yes")
 
 MAX_RETRIES = 3
-# Gemini 무료 티어는 분당 요청 수(RPM) 한도가 있어서(대략 10~15RPM), 429(요청 한도 초과)를
-# 맞으면 한도가 풀릴 때까지 넉넉히 기다려야 한다. 그래서 대기 시간을 10초/30초/65초로 늘렸다
-# (단순 네트워크 끊김에도 같은 값을 쓰지만, 그쪽은 원래도 몇 초 안에 복구되는 경우가 대부분이라
-# 문제 없다).
-RETRY_BACKOFF_SECONDS = [10, 30, 65]  # 시도별 대기 시간 (점점 늘어남)
+RETRY_BACKOFF_SECONDS = [10, 30, 65]
 
 
 class _RetryableAPIError(Exception):
-    """429(요청 한도 초과)처럼, 잠시 기다렸다가 다시 시도하면 성공할 수 있는 오류."""
+    """429(요청 한도 초과), 503(일시적 과부하)처럼 잠시 기다렸다가 다시 시도하면
+    성공할 수 있는 오류."""
+
+
+def _summarize_quota_error(resp_text: str) -> str:
+    """429 응답 본문에서 '분당 한도'인지 '일일 한도'인지를 최대한 구체적으로 뽑아낸다."""
+    try:
+        data = json.loads(resp_text)
+        details = data.get("error", {}).get("details", [])
+        bits = []
+        for d in details:
+            if str(d.get("@type", "")).endswith("QuotaFailure"):
+                for v in d.get("violations", []):
+                    bits.append(f"{v.get('quotaId', '?')}(한도={v.get('quotaValue', '?')})")
+        if bits:
+            return "한도초과 항목: " + ", ".join(bits)
+    except Exception:
+        pass
+    return resp_text[:600]
 
 
 def _request_with_retry(fn, label: str):
-    """네트워크가 간헐적으로 끊기거나(백신/방화벽 SSL 검사 등), API 요청 한도(429)에
-    걸리는 상황에 대비한 재시도 래퍼."""
     last_error = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:
@@ -54,9 +66,7 @@ def _request_with_retry(fn, label: str):
 
 
 def _mock_analyst_response(persona_key: str) -> dict:
-    """API 키 없이 파이프라인 구조를 검증하기 위한 가짜 응답 생성기."""
     opinions = ["매수", "매도", "관망"]
-    # 시드를 페르소나별로 고정해서 매 실행마다 결과가 완전히 무작위로 날뛰지 않게 함
     rng = random.Random(persona_key)
     opinion = rng.choice(opinions)
     confidence = rng.randint(1, 5)
@@ -67,11 +77,9 @@ def _mock_analyst_response(persona_key: str) -> dict:
 
 
 def call_gemini_analyst(system_prompt: str, user_prompt: str, persona_key: str) -> dict:
-    """분석가 1명을 Gemini REST API로 호출하고 {opinion, confidence, reason} dict를 반환."""
     if USE_MOCK:
         return _mock_analyst_response(persona_key)
 
-    # .strip(): Secret을 복사/붙여넣기할 때 끝에 줄바꿈이나 공백이 딸려 들어오는 실수를 방지
     api_key = (os.getenv("GEMINI_API_KEY") or "").strip()
     if not api_key:
         raise RuntimeError(
@@ -89,13 +97,14 @@ def call_gemini_analyst(system_prompt: str, user_prompt: str, persona_key: str) 
     def _do_request():
         r = requests.post(url, params={"key": api_key}, json=payload, timeout=45)
         if r.status_code == 429:
-            # 요청 한도(RPM) 초과 - 잠시 기다리면 풀리므로 재시도 대상으로 넘긴다.
-            raise _RetryableAPIError(f"요청 한도 초과(429): {r.text[:200]}")
+            raise _RetryableAPIError(f"요청 한도 초과(429): {_summarize_quota_error(r.text)}")
+        if r.status_code == 503:
+            raise _RetryableAPIError(f"일시적 서비스 과부하(503): {r.text[:300]}")
         return r
 
     resp = _request_with_retry(_do_request, label=persona_key)
     if resp.status_code != 200:
-        raise RuntimeError(f"Gemini API 오류 ({resp.status_code}): {resp.text[:300]}")
+        raise RuntimeError(f"Gemini API 오류 ({resp.status_code}): {_summarize_quota_error(resp.text)}")
 
     data = resp.json()
     try:
@@ -111,21 +120,12 @@ CLAUDE_API_VERSION = "2023-06-01"
 
 
 def call_claude_guildmaster(system_prompt: str, user_prompt: str) -> str:
-    """멍거의 최종 브리핑을 Claude로 호출하고 텍스트를 반환.
-
-    참고: Anthropic 공식 SDK(anthropic 패키지) 대신 requests로 REST API를 직접 호출한다.
-    GitHub Actions(ubuntu-latest) 환경에서 SDK 내부 HTTP 클라이언트가
-    anthropic.APIConnectionError("Connection error.")를 반복적으로 일으키는 것이 확인되어,
-    이미 다른 곳(Gemini, 텔레그램)에서 안정적으로 동작 중인 requests 방식으로 통일했다.
-    """
     if USE_MOCK:
         return (
             "[MOCK] 멍거의 임시 브리핑입니다. 실제 ANTHROPIC_API_KEY를 설정하면 "
             "7명의 분석을 종합한 진짜 브리핑으로 교체됩니다."
         )
 
-    # .strip(): Secret을 복사/붙여넣기할 때 끝에 줄바꿈이나 공백이 딸려 들어오는 실수를 방지
-    # (HTTP 헤더 값에 줄바꿈이 섞이면 requests.exceptions.InvalidHeader가 발생한다)
     api_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
     if not api_key:
         raise RuntimeError(
