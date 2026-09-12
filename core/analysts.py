@@ -4,9 +4,18 @@
 TauricResearch/TradingAgents의 구조를 참고해, 강세(린치)/약세(버리) 두 분석가에게는
 서로의 1차 의견을 보여주고 한 차례 반박할 기회를 주는 구조화된 토론을 추가했다
 (run_bull_bear_debate). 다른 5명(리버모어/버핏/소로스/우드/탈레브)은 1차 의견이 최종이다.
+
+한 사이클당 Gemini 호출이 최대 9번(분석가 7 + 토론 2)까지 발생하는데, Gemini 무료 티어는
+분당 요청 수(RPM) 한도가 있어서(대략 10~15RPM) 짧은 시간에 몰아치면 429(요청 한도 초과)가
+난다. 그래서 호출 사이에 일부러 간격(GEMINI_CALL_DELAY_SECONDS)을 둬서 애초에 한도에
+걸리지 않도록 한다.
 """
+import time
+
 from config.personas import ANALYSTS
 from core.llm_client import call_gemini_analyst
+
+GEMINI_CALL_DELAY_SECONDS = 7
 
 USER_PROMPT_TEMPLATE = (
     "아래는 분석 대상 종목의 최신 데이터입니다.\n\n"
@@ -31,7 +40,8 @@ DEBATE_PROMPT_TEMPLATE = (
 def run_all_analysts(context: str) -> list[dict]:
     """9인 중 7명의 분석가를 순서대로 호출해 의견 리스트를 반환."""
     results = []
-    for key, persona in ANALYSTS.items():
+    keys = list(ANALYSTS.items())
+    for i, (key, persona) in enumerate(keys):
         user_prompt = USER_PROMPT_TEMPLATE.format(context=context)
         try:
             raw = call_gemini_analyst(persona["system_prompt"], user_prompt, key)
@@ -49,6 +59,8 @@ def run_all_analysts(context: str) -> list[dict]:
                 "reason": raw.get("reason", ""),
             }
         )
+        if i < len(keys) - 1:  # 마지막 호출 뒤에는 굳이 기다릴 필요 없음
+            time.sleep(GEMINI_CALL_DELAY_SECONDS)
     return results
 
 
@@ -68,6 +80,7 @@ def run_bull_bear_debate(context: str, results: list[dict]) -> list[dict]:
     # 토론 도중 서로의 의견이 뒤섞이지 않도록, 1차 의견을 먼저 변수에 고정해둔다.
     lynch_r1, burry_r1 = lynch["reason"], burry["reason"]
 
+    time.sleep(GEMINI_CALL_DELAY_SECONDS)  # 직전 7명 분석 호출과의 간격을 유지
     try:
         lynch_final = call_gemini_analyst(
             ANALYSTS["lynch"]["system_prompt"],
@@ -83,6 +96,7 @@ def run_bull_bear_debate(context: str, results: list[dict]) -> list[dict]:
     except Exception as e:
         lynch["reason"] += f" [토론 단계 오류로 1차 의견 유지: {e}]"
 
+    time.sleep(GEMINI_CALL_DELAY_SECONDS)
     try:
         burry_final = call_gemini_analyst(
             ANALYSTS["burry"]["system_prompt"],
