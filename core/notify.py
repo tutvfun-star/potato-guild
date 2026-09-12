@@ -9,8 +9,9 @@ RETRY_BACKOFF_SECONDS = [3, 7, 15]
 
 
 def send_telegram(message: str) -> bool:
-    token = os.getenv("TELEGRAM_BOT_TOKEN")
-    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    # .strip(): Secret을 복사/붙여넣기할 때 끝에 줄바꿈이나 공백이 딸려 들어오는 실수를 방지
+    token = (os.getenv("TELEGRAM_BOT_TOKEN") or "").strip()
+    chat_id = (os.getenv("TELEGRAM_CHAT_ID") or "").strip()
 
     if not token or not chat_id:
         print("\n[알림 - 텔레그램 미설정, 콘솔에 대신 출력합니다]")
