@@ -57,6 +57,8 @@ def _summarize_quota_error(resp_text: str) -> str:
 
 
 def _request_with_retry(fn, label: str):
+    """네트워크가 간헐적으로 끊기거나(백신/방화벽 SSL 검사 등), API 요청 한도(429)에
+    걸리는 상황에 대비한 재시도 래퍼."""
     last_error = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:
@@ -71,6 +73,7 @@ def _request_with_retry(fn, label: str):
 
 
 def _mock_analyst_response(persona_key: str) -> dict:
+    """API 키 없이 파이프라인 구조를 검증하기 위한 가짜 응답 생성기."""
     opinions = ["매수", "매도", "관망"]
     rng = random.Random(persona_key)
     opinion = rng.choice(opinions)
@@ -146,7 +149,7 @@ def call_claude_guildmaster(system_prompt: str, user_prompt: str) -> str:
         "anthropic-version": CLAUDE_API_VERSION,
         "content-type": "application/json",
     }
-       payload = {
+    payload = {
         # 500토큰으로는 브리핑이 문장 중간에 잘리는 경우가 있어(실측 확인) 800으로 올림.
         "model": "claude-sonnet-4-5",
         "max_tokens": 800,
