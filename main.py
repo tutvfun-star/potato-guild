@@ -37,7 +37,7 @@ def run_cycle(ticker: str) -> None:
     if reflection:
         print(f"\n[과거 판단 회고] {reflection}")
 
-    print("\n2) 7명의 전문가 소집 중 (Gemini)...")
+    print("\n2) 7명의 전문가 소집 중 (Claude Haiku...")
     analyst_results = run_all_analysts(context)
     for r in analyst_results:
         print(f"   {r['emoji']} {r['display_name']}: {r['opinion']}(확신도 {r['confidence']}) - {r['reason']}")
