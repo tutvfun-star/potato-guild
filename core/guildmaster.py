@@ -12,11 +12,10 @@ from dataclasses import dataclass, field
 from config.personas import GUILDMASTER
 from core.llm_client import call_claude_guildmaster
 
-# --- 사용자와 합의한 실행 규칙 ---
-MIN_EXECUTE_SCORE = 8      # 이 점수 미만이면 무조건 관망
-WEAK_SCORE = 8              # 8~13   -> 약함 (5%)
-MODERATE_SCORE = 14         # 14~20  -> 보통 (10%)
-STRONG_SCORE = 21           # 21+    -> 강함 (15%)
+MIN_EXECUTE_SCORE = 8
+WEAK_SCORE = 8
+MODERATE_SCORE = 14
+STRONG_SCORE = 21
 
 SIZING_TABLE = {
     "약함": 0.05,
@@ -29,9 +28,9 @@ SIZING_TABLE = {
 class GuildVerdict:
     ticker: str
     score: int
-    signal: str            # "매수" | "매도" | "관망"
-    strength: str | None   # "약함" | "보통" | "강함" | None(관망일 때)
-    position_pct: float    # 0.0 ~ 0.15
+    signal: str
+    strength: str | None
+    position_pct: float
     risk_veto: bool
     briefing: str = ""
     analyst_results: list = field(default_factory=list)
@@ -93,7 +92,6 @@ def deliberate(
         analyst_results=analyst_results,
     )
 
-    # Claude에게는 "결정해달라"가 아니라 "이미 정해진 결과를 설명해달라"고만 요청한다.
     opinions_text = "\n".join(
         f"- {r['emoji']} {r['display_name']}({r['role']}): {r['opinion']} "
         f"(확신도 {r['confidence']}) - {r['reason']}"
