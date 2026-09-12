@@ -77,6 +77,7 @@ def _mock_analyst_response(persona_key: str) -> dict:
 
 
 def call_gemini_analyst(system_prompt: str, user_prompt: str, persona_key: str) -> dict:
+    """분석가 1명을 Gemini REST API로 호출하고 {opinion, confidence, reason} dict를 반환."""
     if USE_MOCK:
         return _mock_analyst_response(persona_key)
 
@@ -87,7 +88,12 @@ def call_gemini_analyst(system_prompt: str, user_prompt: str, persona_key: str) 
             "테스트만 원한다면 POTATO_GUILD_MOCK=1 로 실행하세요."
         )
 
-    url = GEMINI_ENDPOINT.format(model="gemini-3.6-flash")
+    # gemini-3.6-flash는 "저비용 서브에이전트"용으로 포지셔닝된 모델이라 무료 일일
+    # 한도가 20회밖에 안 됐다(AI Studio 사용량 화면에서
+    # GenerateRequestsPerDayPerProjectPerModel-FreeTier(한도=20)로 실측 확인).
+    # gemini-flash-latest는 구글이 "현재 주력 flash 모델"을 계속 가리키도록 관리하는
+    # 별칭이라, 훨씬 표준적인(더 넉넉한) 무료 티어 한도를 받을 가능성이 높다.
+    url = GEMINI_ENDPOINT.format(model="gemini-flash-latest")
     payload = {
         "system_instruction": {"parts": [{"text": system_prompt}]},
         "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
@@ -120,6 +126,13 @@ CLAUDE_API_VERSION = "2023-06-01"
 
 
 def call_claude_guildmaster(system_prompt: str, user_prompt: str) -> str:
+    """멍거의 최종 브리핑을 Claude로 호출하고 텍스트를 반환.
+
+    참고: Anthropic 공식 SDK(anthropic 패키지) 대신 requests로 REST API를 직접 호출한다.
+    GitHub Actions(ubuntu-latest) 환경에서 SDK 내부 HTTP 클라이언트가
+    anthropic.APIConnectionError("Connection error.")를 반복적으로 일으키는 것이 확인되어,
+    이미 다른 곳(Gemini, 텔레그램)에서 안정적으로 동작 중인 requests 방식으로 통일했다.
+    """
     if USE_MOCK:
         return (
             "[MOCK] 멍거의 임시 브리핑입니다. 실제 ANTHROPIC_API_KEY를 설정하면 "
