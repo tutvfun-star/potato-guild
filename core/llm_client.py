@@ -26,20 +26,29 @@ GEMINI_ENDPOINT = (
 USE_MOCK = os.getenv("POTATO_GUILD_MOCK", "").lower() in ("1", "true", "yes")
 
 MAX_RETRIES = 3
-RETRY_BACKOFF_SECONDS = [3, 7, 15]  # 시도별 대기 시간 (점점 늘어남)
+# Gemini 무료 티어는 분당 요청 수(RPM) 한도가 있어서(대략 10~15RPM), 429(요청 한도 초과)를
+# 맞으면 한도가 풀릴 때까지 넉넉히 기다려야 한다. 그래서 대기 시간을 10초/30초/65초로 늘렸다
+# (단순 네트워크 끊김에도 같은 값을 쓰지만, 그쪽은 원래도 몇 초 안에 복구되는 경우가 대부분이라
+# 문제 없다).
+RETRY_BACKOFF_SECONDS = [10, 30, 65]  # 시도별 대기 시간 (점점 늘어남)
+
+
+class _RetryableAPIError(Exception):
+    """429(요청 한도 초과)처럼, 잠시 기다렸다가 다시 시도하면 성공할 수 있는 오류."""
 
 
 def _request_with_retry(fn, label: str):
-    """네트워크가 간헐적으로 끊기는 환경(백신/방화벽 SSL 검사 등)에 대비한 재시도 래퍼."""
+    """네트워크가 간헐적으로 끊기거나(백신/방화벽 SSL 검사 등), API 요청 한도(429)에
+    걸리는 상황에 대비한 재시도 래퍼."""
     last_error = None
     for attempt in range(1, MAX_RETRIES + 1):
         try:
             return fn()
-        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as e:
+        except (requests.exceptions.Timeout, requests.exceptions.ConnectionError, _RetryableAPIError) as e:
             last_error = e
             if attempt < MAX_RETRIES:
                 wait = RETRY_BACKOFF_SECONDS[min(attempt - 1, len(RETRY_BACKOFF_SECONDS) - 1)]
-                print(f"   ⏳ {label} 네트워크 오류, {wait}초 후 재시도 ({attempt}/{MAX_RETRIES}): {e}")
+                print(f"   ⏳ {label} 오류, {wait}초 후 재시도 ({attempt}/{MAX_RETRIES}): {e}")
                 time.sleep(wait)
     raise last_error
 
@@ -76,10 +85,15 @@ def call_gemini_analyst(system_prompt: str, user_prompt: str, persona_key: str) 
         "contents": [{"role": "user", "parts": [{"text": user_prompt}]}],
         "generationConfig": {"response_mime_type": "application/json"},
     }
-    resp = _request_with_retry(
-        lambda: requests.post(url, params={"key": api_key}, json=payload, timeout=45),
-        label=persona_key,
-    )
+
+    def _do_request():
+        r = requests.post(url, params={"key": api_key}, json=payload, timeout=45)
+        if r.status_code == 429:
+            # 요청 한도(RPM) 초과 - 잠시 기다리면 풀리므로 재시도 대상으로 넘긴다.
+            raise _RetryableAPIError(f"요청 한도 초과(429): {r.text[:200]}")
+        return r
+
+    resp = _request_with_retry(_do_request, label=persona_key)
     if resp.status_code != 200:
         raise RuntimeError(f"Gemini API 오류 ({resp.status_code}): {resp.text[:300]}")
 
@@ -131,10 +145,13 @@ def call_claude_guildmaster(system_prompt: str, user_prompt: str) -> str:
         "messages": [{"role": "user", "content": user_prompt}],
     }
 
-    resp = _request_with_retry(
-        lambda: requests.post(CLAUDE_ENDPOINT, headers=headers, json=payload, timeout=45),
-        label="멍거(Claude)",
-    )
+    def _do_request():
+        r = requests.post(CLAUDE_ENDPOINT, headers=headers, json=payload, timeout=45)
+        if r.status_code == 429:
+            raise _RetryableAPIError(f"요청 한도 초과(429): {r.text[:200]}")
+        return r
+
+    resp = _request_with_retry(_do_request, label="멍거(Claude)")
     if resp.status_code != 200:
         raise RuntimeError(f"Claude API 오류 ({resp.status_code}): {resp.text[:300]}")
 
