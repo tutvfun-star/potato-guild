@@ -146,9 +146,10 @@ def call_claude_guildmaster(system_prompt: str, user_prompt: str) -> str:
         "anthropic-version": CLAUDE_API_VERSION,
         "content-type": "application/json",
     }
-    payload = {
+       payload = {
+        # 500토큰으로는 브리핑이 문장 중간에 잘리는 경우가 있어(실측 확인) 800으로 올림.
         "model": "claude-sonnet-4-5",
-        "max_tokens": 500,
+        "max_tokens": 800,
         "system": system_prompt,
         "messages": [{"role": "user", "content": user_prompt}],
     }
@@ -157,6 +158,8 @@ def call_claude_guildmaster(system_prompt: str, user_prompt: str) -> str:
         r = requests.post(CLAUDE_ENDPOINT, headers=headers, json=payload, timeout=45)
         if r.status_code == 429:
             raise _RetryableAPIError(f"요청 한도 초과(429): {r.text[:200]}")
+        if r.status_code == 529:
+            raise _RetryableAPIError(f"일시적 과부하(529): {r.text[:300]}")
         return r
 
     resp = _request_with_retry(_do_request, label="멍거(Claude)")
