@@ -62,7 +62,8 @@ def call_gemini_analyst(system_prompt: str, user_prompt: str, persona_key: str) 
     if USE_MOCK:
         return _mock_analyst_response(persona_key)
 
-    api_key = os.getenv("GEMINI_API_KEY")
+    # .strip(): Secret을 복사/붙여넣기할 때 끝에 줄바꿈이나 공백이 딸려 들어오는 실수를 방지
+    api_key = (os.getenv("GEMINI_API_KEY") or "").strip()
     if not api_key:
         raise RuntimeError(
             "GEMINI_API_KEY가 설정되지 않았습니다. .env 파일을 확인하거나, "
@@ -109,7 +110,9 @@ def call_claude_guildmaster(system_prompt: str, user_prompt: str) -> str:
             "7명의 분석을 종합한 진짜 브리핑으로 교체됩니다."
         )
 
-    api_key = os.getenv("ANTHROPIC_API_KEY")
+    # .strip(): Secret을 복사/붙여넣기할 때 끝에 줄바꿈이나 공백이 딸려 들어오는 실수를 방지
+    # (HTTP 헤더 값에 줄바꿈이 섞이면 requests.exceptions.InvalidHeader가 발생한다)
+    api_key = (os.getenv("ANTHROPIC_API_KEY") or "").strip()
     if not api_key:
         raise RuntimeError(
             "ANTHROPIC_API_KEY가 설정되지 않았습니다. .env 파일을 확인하거나, "
