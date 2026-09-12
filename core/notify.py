@@ -41,15 +41,12 @@ def send_telegram(message: str) -> bool:
 
 
 def build_report_message(verdict, trade_result, perf: dict) -> str:
-    # 실행 시각(한국시간)을 맨 위에 찍어서, 텔레그램에서 언제 생성된 리포트인지
-    # 바로 알 수 있게 한다. GitHub Actions는 UTC로 돌기 때문에 반드시 타임존을
-    # 명시해서 KST로 변환해야 한다.
     now_kst = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M:%S")
     lines = [
         f"🕒 {now_kst} (KST)",
         f"🥔 포테이토 길드 리포트 - {verdict.ticker}",
         "",
-        f"👑 멍거: {verdict.briefing}",
+        f"👑 멍거(길드마스터): {verdict.briefing}",
         "",
         f"📊 종합 스코어: {verdict.score} / 최종 신호: {verdict.signal}"
         + (f" ({verdict.strength}, {verdict.position_pct*100:.0f}%)" if verdict.strength else ""),
@@ -73,6 +70,9 @@ def build_report_message(verdict, trade_result, perf: dict) -> str:
     lines.append("")
     lines.append("🗣️ 전문가 의견 요약:")
     for r in verdict.analyst_results:
-        lines.append(f"  {r['emoji']} {r['display_name']}: {r['opinion']}(확신도 {r['confidence']}) - {r['reason']}")
+        lines.append(
+            f"  {r['emoji']} {r['display_name']}({r['role']}): "
+            f"{r['opinion']}(확신도 {r['confidence']}) - {r['reason']}"
+        )
 
     return "\n".join(lines)
