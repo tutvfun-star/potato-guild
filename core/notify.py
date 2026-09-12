@@ -2,6 +2,8 @@
 """텔레그램 알림 - 토큰이 없으면 콘솔 출력으로 대체(테스트 편의)."""
 import os
 import time
+from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import requests
 
@@ -9,7 +11,6 @@ RETRY_BACKOFF_SECONDS = [3, 7, 15]
 
 
 def send_telegram(message: str) -> bool:
-    # .strip(): Secret을 복사/붙여넣기할 때 끝에 줄바꿈이나 공백이 딸려 들어오는 실수를 방지
     token = (os.getenv("TELEGRAM_BOT_TOKEN") or "").strip()
     chat_id = (os.getenv("TELEGRAM_CHAT_ID") or "").strip()
 
@@ -40,7 +41,12 @@ def send_telegram(message: str) -> bool:
 
 
 def build_report_message(verdict, trade_result, perf: dict) -> str:
+    # 실행 시각(한국시간)을 맨 위에 찍어서, 텔레그램에서 언제 생성된 리포트인지
+    # 바로 알 수 있게 한다. GitHub Actions는 UTC로 돌기 때문에 반드시 타임존을
+    # 명시해서 KST로 변환해야 한다.
+    now_kst = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M:%S")
     lines = [
+        f"🕒 {now_kst} (KST)",
         f"🥔 포테이토 길드 리포트 - {verdict.ticker}",
         "",
         f"👑 멍거: {verdict.briefing}",
