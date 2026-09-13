@@ -78,6 +78,26 @@ TauricResearch/TradingAgents를 참고해 아래 3가지를 추가했습니다.
 `core/data_fetch.py`(ATR/지지선/저항선)와 `core/guildmaster.py`(목표가/손절가/손익비)에
 있고, `tests_manual.py`에 결정론적 단위 테스트가 있습니다.
 
+## 토스증권 실계좌 연동 (조회 전용)
+
+`core/toss_client.py`가 토스증권 Open API(OAuth 2.0 Client Credentials Grant)로 실계좌의
+**예수금(현금)과 보유 종목 현황을 조회**해서 텔레그램 리포트에 "🏦 토스 실계좌" 섹션으로
+얹어줍니다. 분석 중인 종목을 이미 보유하고 있으면 수량/평단가/평가손익까지 함께 보여줘서,
+매수·매도 신호가 실제 내 상황에서 바로 의미가 있는지 판단하기 쉽게 했습니다.
+
+- **범위는 조회까지만입니다.** 실제 매수/매도 주문 API는 코드 어디에서도 호출하지 않고,
+  주문 실행은 항상 사용자가 토스증권 앱에서 직접 합니다(합의한 범위: "신호 알림까지, 주문은
+  직접").
+- `TOSS_CLIENT_ID`/`TOSS_CLIENT_SECRET`이 설정돼 있지 않으면 이 섹션 자체를 조용히 생략하고
+  나머지 분석/매매 파이프라인은 평소대로 진행됩니다 — 부가 기능이라 필수가 아닙니다.
+- 조회에 실패해도(네트워크 오류, 토큰 만료 등 최대 3회 재시도 후) 파이프라인은 멈추지 않고
+  콘솔에 실패 사유만 남긴 뒤 계속 진행합니다.
+- ⚠️ **응답 필드명 검증 필요**: 토스증권 공식 OpenAPI 문서를 기준으로 파싱 로직을 작성했지만,
+  실제 계좌로 최초 실행하기 전까지는 필드명(예: `cashAmount`, `purchasePrice`)이 100% 맞다고
+  보장할 수 없습니다. 첫 실행 후 "🏦 토스 실계좌" 섹션이 이상하게(0원, 보유종목 안 잡힘 등)
+  나오면 GitHub Actions 로그의 `⚠️ 토스 실계좌 조회 실패` 메시지를 그대로 공유해 주세요 — 원인
+  파악해서 필드명을 맞추겠습니다.
+
 ## 로드맵 (진행 중인 확장 작업)
 
 기존에는 종목 하나씩 지정해서 분석했는데, 아래 3가지를 단계적으로 추가하는 중입니다.
@@ -86,10 +106,8 @@ TauricResearch/TradingAgents를 참고해 아래 3가지를 추가했습니다.
 2. **다종목 자동 스크리닝 (예정)** — 코스피/코스닥 시가총액 상위 종목을 큐레이션된 티커
    목록(yfinance 기반, KRX 로그인 정책 변경으로 `pykrx`는 사용하지 않음)으로 먼저 가볍게
    훑은 뒤, 유망한 후보에 대해서만 9인 전문가 딥다이브를 돌리는 방식.
-3. **토스증권 계좌 연동 (예정, 사용자 작업 대기 중)** — 토스증권 Open API(`corp.tossinvest.com`)로
-   실제 보유 종목/잔고를 가져와 매수/매도 "신호 알림"에 반영합니다. 실제 주문 체결은 자동화하지
-   않고 항상 사용자가 직접 하는 것으로 범위를 정했습니다. 시작하려면 사용자가 토스증권 Open API
-   개발자 신청을 완료해 `client_id`/`client_secret`을 발급받아야 합니다.
+3. **토스증권 계좌 연동 (완료, 검증 대기 중)** — 위 "토스증권 실계좌 연동" 섹션 참고.
+   실제 계좌로 첫 실행해보고 결과를 공유해주시면 필드명 검증까지 마무리하겠습니다.
 
 ## 폴더 구조
 
@@ -105,6 +123,7 @@ potato-guild/
 │   ├── guildmaster.py         # 점수 계산 + 리스크 거부권 + 멍거 브리핑(회고 반영)
 │   ├── memory.py              # 과거 판단 회고(reflection) 기록/계산
 │   ├── potato.py              # 모의투자 실행 엔진 (포지션 사이징/현금관리)
+│   ├── toss_client.py         # 토스증권 실계좌 조회 (예수금/보유종목, 주문은 절대 안 함)
 │   └── notify.py              # 텔레그램 알림
 ├── data/portfolio.json        # 포테이토의 모의 계좌 상태 (자동 갱신됨)
 ├── data/memory.json           # 과거 판단 회고 기록 (자동 갱신됨)
@@ -120,6 +139,7 @@ potato-guild/
 |---|---|---|---|
 | `ANTHROPIC_API_KEY` | 7명 분석가(Haiku) + 멍거 브리핑(Sonnet) | https://console.anthropic.com | 저비용 종량제 (월 몇천 원 수준) |
 | `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` | 알림 (선택) | @BotFather 에게 `/newbot` | 무료 |
+| `TOSS_CLIENT_ID` / `TOSS_CLIENT_SECRET` | 토스 실계좌 조회 (선택) | https://corp.tossinvest.com/ko/open-api | 무료 (조회 전용) |
 | `GEMINI_API_KEY` | (선택, 현재 미사용 폴백) | https://aistudio.google.com/apikey | 무료 (카드 불필요) |
 
 ### 2. 로컬에서 테스트
@@ -142,7 +162,8 @@ python main.py 005930.KS
 
 1. 이 폴더를 **본인의 GitHub 저장소**로 올립니다 (퍼블릭 레포로 만들면 Actions 실행 시간이 완전 무료입니다).
 2. 저장소 Settings → Secrets and variables → Actions 에서 위 키들을 등록합니다
-   (`GEMINI_API_KEY`는 현재 미사용이라 생략해도 됩니다).
+   (`GEMINI_API_KEY`는 현재 미사용이라 생략해도 되고, `TOSS_CLIENT_ID`/`TOSS_CLIENT_SECRET`도
+   토스 연동을 원하지 않으면 생략해도 됩니다).
 3. `.github/workflows/guild_run.yml`의 cron 스케줄과 종목 코드를 원하는 대로 수정합니다.
 4. Actions 탭 → "포테이토 길드 정기 소집" → Run workflow 로 수동 실행도 가능합니다.
 5. 실행이 끝나면 `data/portfolio.json`과 `data/memory.json`이 자동으로 커밋되어
