@@ -11,6 +11,7 @@ RETRY_BACKOFF_SECONDS = [3, 7, 15]
 
 
 def send_telegram(message: str) -> bool:
+    # .strip(): Secret을 복사/붙여넣기할 때 끝에 줄바꿈이나 공백이 딸려 들어오는 실수를 방지
     token = (os.getenv("TELEGRAM_BOT_TOKEN") or "").strip()
     chat_id = (os.getenv("TELEGRAM_CHAT_ID") or "").strip()
 
@@ -41,6 +42,9 @@ def send_telegram(message: str) -> bool:
 
 
 def build_report_message(verdict, trade_result, perf: dict) -> str:
+    # 실행 시각(한국시간)을 맨 위에 찍어서, 텔레그램에서 언제 생성된 리포트인지
+    # 바로 알 수 있게 한다. GitHub Actions는 UTC로 돌기 때문에 반드시 타임존을
+    # 명시해서 KST로 변환해야 한다.
     now_kst = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M:%S")
     lines = [
         f"🕒 {now_kst} (KST)",
@@ -53,6 +57,12 @@ def build_report_message(verdict, trade_result, perf: dict) -> str:
     ]
     if verdict.risk_veto:
         lines.append("🛡️ 탈레브 위험 경고로 거부권이 발동되어 관망 처리되었습니다.")
+
+    if verdict.target_price is not None:
+        lines.append(
+            f"🎯 목표가: {verdict.target_price:,.0f}원 / 🛑 손절가: {verdict.stop_loss:,.0f}원 "
+            f"(손익비 1:{verdict.risk_reward}) — 예측이 아닌 최근 지지선/저항선·변동성 기반 가이드라인"
+        )
 
     lines.append("")
     lines.append(f"💰 실행 결과: {trade_result.action} {trade_result.ticker}")
