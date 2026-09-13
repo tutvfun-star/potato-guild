@@ -41,7 +41,7 @@ def send_telegram(message: str) -> bool:
     return False
 
 
-def build_report_message(verdict, trade_result, perf: dict) -> str:
+def build_report_message(verdict, trade_result, perf: dict, toss_snapshot=None, toss_holding=None) -> str:
     # 실행 시각(한국시간)을 맨 위에 찍어서, 텔레그램에서 언제 생성된 리포트인지
     # 바로 알 수 있게 한다. GitHub Actions는 UTC로 돌기 때문에 반드시 타임존을
     # 명시해서 KST로 변환해야 한다.
@@ -73,9 +73,27 @@ def build_report_message(verdict, trade_result, perf: dict) -> str:
 
     lines.append("")
     lines.append(
-        f"📈 계좌 현황: 총자산 {perf['total_assets']:,}원 "
+        f"📈 모의계좌 현황: 총자산 {perf['total_assets']:,}원 "
         f"(손익 {perf['pnl']:+,}원, {perf['pnl_pct']:+.2f}%) / 현금 {perf['cash']:,}원"
     )
+
+    if toss_snapshot is not None:
+        lines.append("")
+        lines.append(
+            f"🏦 토스 실계좌: 예수금 {toss_snapshot.cash:,.0f}원 / "
+            f"총평가 {toss_snapshot.total_evaluation_amount:,.0f}원 "
+            f"({toss_snapshot.total_return_amount:+,.0f}원, {toss_snapshot.total_return_rate:+.2f}%)"
+        )
+        if toss_holding is not None and toss_holding.quantity:
+            avg = f"{toss_holding.purchase_price:,.0f}원" if toss_holding.purchase_price is not None else "정보 없음"
+            eval_amt = (
+                f", 평가손익 {toss_holding.return_amount:+,.0f}원 ({toss_holding.return_rate:+.2f}%)"
+                if toss_holding.return_amount is not None
+                else ""
+            )
+            lines.append(f"   이 종목 보유 중: {toss_holding.quantity:.0f}주 @ 평단가 {avg}{eval_amt}")
+        else:
+            lines.append("   이 종목은 실계좌에 보유하고 있지 않습니다.")
 
     lines.append("")
     lines.append("🗣️ 전문가 의견 요약:")
