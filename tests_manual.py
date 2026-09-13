@@ -5,7 +5,13 @@ LLM 호출 없이 core.guildmaster / core.potato 의 순수 로직만 검증한�
 
 실행: python tests_manual.py
 """
-from core.guildmaster import _check_risk_veto, _compute_score, _strength_and_sizing
+from core.data_fetch import _calc_atr, _calc_support_resistance
+from core.guildmaster import (
+    _check_risk_veto,
+    _compute_price_levels,
+    _compute_score,
+    _strength_and_sizing,
+)
 from core.memory import build_reflection
 from core.potato import MAX_POSITIONS, MIN_CASH_RESERVE_RATIO, execute
 
@@ -90,6 +96,39 @@ check("매도 후 가격 하락 -> 적중", "적중" in build_reflection(mem_sel
 check("매도 후 가격 상승 -> 빗나감", "빗나감" in build_reflection(mem_sell, "MSFT", 220))
 check("기록 없는 종목은 회고 없음(None)", build_reflection(mem, "TSLA", 100) is None)
 check("현재가가 없으면 회고 없음(None)", build_reflection(mem, "AAPL", None) is None)
+
+print("\n[10] ATR(변동성) 계산")
+# 매일 고가-저가 폭이 정확히 10인 15일치 데이터 -> ATR(14) = 10
+highs10 = [110 + i for i in range(15)]
+lows10 = [100 + i for i in range(15)]
+closes10 = [105 + i for i in range(15)]
+check("고가-저가 폭이 항상 10이면 ATR(14) = 10.0", _calc_atr(highs10, lows10, closes10) == 10.0)
+check("데이터가 15일 미만이면 ATR 계산 불가 -> None", _calc_atr(highs10[:5], lows10[:5], closes10[:5]) is None)
+
+print("\n[11] 지지선/저항선 계산")
+highs_sr = [100, 105, 103, 110, 102]
+lows_sr = [95, 98, 96, 101, 94]
+support, resistance = _calc_support_resistance(highs_sr, lows_sr, lookback=5)
+check("최근 5일 저가 중 최저치가 지지선(94)", support == 94)
+check("최근 5일 고가 중 최고치가 저항선(110)", resistance == 110)
+support_empty, resistance_empty = _calc_support_resistance([], [])
+check("데이터가 없으면 지지선/저항선 모두 None", support_empty is None and resistance_empty is None)
+
+print("\n[12] 목표가/손절가 계산 (지지선/저항선 + ATR 기반)")
+# 진입가 100, 지지선 90, 저항선 120, ATR 10 -> 손절가 = 90 - 0.5*10 = 85, 목표가 = 120
+target, stop, rr = _compute_price_levels(entry_price=100, support=90, resistance=120, atr14=10)
+check("목표가 = 저항선(120)", target == 120)
+check("손절가 = 지지선 - ATR*0.5 (85)", stop == 85)
+check("손익비 = (120-100)/(100-85) = 1.33", rr == 1.33)
+check("데이터 중 하나라도 None이면 전부 None", _compute_price_levels(100, None, 120, 10) == (None, None, None))
+check(
+    "현재가가 이미 저항선 위(억지스러운 경우)면 전부 None",
+    _compute_price_levels(entry_price=130, support=90, resistance=120, atr14=10) == (None, None, None),
+)
+check(
+    "현재가가 이미 지지선 아래(억지스러운 경우)면 전부 None",
+    _compute_price_levels(entry_price=80, support=90, resistance=120, atr14=10) == (None, None, None),
+)
 
 print(f"\n{'='*40}\n결과: {PASS} 통과 / {FAIL} 실패\n{'='*40}")
 if FAIL:
