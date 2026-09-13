@@ -20,6 +20,7 @@ from core.guildmaster import deliberate
 from core.memory import build_reflection, load_memory, record_decision, save_memory
 from core.notify import build_report_message, send_telegram
 from core.potato import execute, load_portfolio, performance_summary, save_portfolio
+from core.toss_client import fetch_account_snapshot, find_holding
 
 load_dotenv()
 
@@ -37,7 +38,7 @@ def run_cycle(ticker: str) -> None:
     if reflection:
         print(f"\n[과거 판단 회고] {reflection}")
 
-    print("\n2) 7명의 전문가 소집 중 (Claude Haiku...")
+    print("\n2) 7명의 전문가 소집 중 (Claude Haiku)...")
     analyst_results = run_all_analysts(context)
     for r in analyst_results:
         print(f"   {r['emoji']} {r['display_name']}: {r['opinion']}(확신도 {r['confidence']}) - {r['reason']}")
@@ -50,7 +51,7 @@ def run_cycle(ticker: str) -> None:
             print(f"   (토론 후) {r['emoji']} {r['display_name']}: {r['opinion']}(확신도 {r['confidence']}) - {r['reason']}")
 
     print("\n3) 멍거 종합 판단 중 (Claude)...")
-    verdict = deliberate(ticker, context, analyst_results, reflection=reflection)
+    verdict = deliberate(ticker, context, analyst_results, snap, reflection=reflection)
     print(f"   종합 스코어: {verdict.score} / 신호: {verdict.signal}")
     print(f"   브리핑: {verdict.briefing}")
 
@@ -65,8 +66,15 @@ def run_cycle(ticker: str) -> None:
     record_decision(memory, ticker, verdict.signal, verdict.score, snap.price)
     save_memory(memory)
 
+    print("\n4.5) 토스 실계좌 조회 중 (선택, 미설정이면 건너뜀)...")
+    toss_snapshot = fetch_account_snapshot()
+    toss_holding = find_holding(toss_snapshot, ticker)
+    if toss_snapshot is not None:
+        print(f"   예수금: {toss_snapshot.cash:,.0f}원 / 이 종목 보유: "
+              f"{toss_holding.quantity if toss_holding else 0}주")
+
     print("\n5) 알림 발송 중...")
-    message = build_report_message(verdict, trade_result, perf)
+    message = build_report_message(verdict, trade_result, perf, toss_snapshot, toss_holding)
     send_telegram(message)
 
 
