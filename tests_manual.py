@@ -14,6 +14,7 @@ from core.guildmaster import (
 )
 from core.memory import build_reflection
 from core.potato import MAX_POSITIONS, MIN_CASH_RESERVE_RATIO, execute
+from core.toss_client import TossAccountSnapshot, TossHolding, _parse_assets, _to_toss_symbol, find_holding
 
 PASS = 0
 FAIL = 0
@@ -129,6 +130,41 @@ check(
     "현재가가 이미 지지선 아래(억지스러운 경우)면 전부 None",
     _compute_price_levels(entry_price=80, support=90, resistance=120, atr14=10) == (None, None, None),
 )
+
+print("\n[13] 토스 티커 <-> 종목코드 변환")
+check("005930.KS -> 005930", _to_toss_symbol("005930.KS") == "005930")
+check("035420.KQ -> 035420", _to_toss_symbol("035420.KQ") == "035420")
+check("접미사 없는 미국 티커는 그대로 (AAPL)", _to_toss_symbol("AAPL") == "AAPL")
+
+print("\n[14] 토스 /api/v1/assets 응답 파싱")
+raw_assets = {
+    "summary": {
+        "cashAmount": "3000000",
+        "totalEvaluationAmount": "7000000",
+        "totalReturnAmount": "250000",
+        "totalReturnRate": "3.7",
+    },
+    "holdings": [
+        {
+            "symbol": "005930", "name": "삼성전자", "quantity": "10",
+            "purchasePrice": "68000", "currentPrice": "71000",
+            "evaluationAmount": "710000", "returnAmount": "30000", "returnRate": "4.4",
+        }
+    ],
+}
+snap = _parse_assets(raw_assets)
+check("예수금(cash) 파싱 = 3,000,000", snap.cash == 3_000_000.0)
+check("보유 종목 1개 파싱됨", len(snap.holdings) == 1)
+check("보유 종목 수량(quantity) = 10", snap.holdings[0].quantity == 10.0)
+check("보유 종목 평단가(purchase_price) = 68,000", snap.holdings[0].purchase_price == 68_000.0)
+
+print("\n[15] 실계좌 보유 종목 매칭 (find_holding)")
+check("보유 중인 종목(005930.KS)을 정확히 찾음", find_holding(snap, "005930.KS").symbol == "005930")
+check("보유하지 않은 종목(035420.KS)은 None", find_holding(snap, "035420.KS") is None)
+check("스냅샷이 None이면 항상 None", find_holding(None, "005930.KS") is None)
+raw_assets_missing_summary = {"holdings": []}  # summary 키 자체가 없는 경우(방어적 파싱 확인)
+snap_missing = _parse_assets(raw_assets_missing_summary)
+check("summary가 없어도 예외 없이 기본값(0)으로 처리됨", snap_missing.cash == 0.0)
 
 print(f"\n{'='*40}\n결과: {PASS} 통과 / {FAIL} 실패\n{'='*40}")
 if FAIL:
