@@ -5,7 +5,7 @@ LLM 호출 없이 core.guildmaster / core.potato 의 순수 로직만 검증한�
 
 실행: python tests_manual.py
 """
-from core.data_fetch import _calc_atr, _calc_support_resistance
+from core.data_fetch import _calc_atr, _calc_support_resistance, _pe_pb_with_fallback
 from core.guildmaster import (
     _check_risk_veto,
     _compute_price_levels,
@@ -165,6 +165,33 @@ check("스냅샷이 None이면 항상 None", find_holding(None, "005930.KS") is 
 raw_assets_missing_summary = {"holdings": []}  # summary 키 자체가 없는 경우(방어적 파싱 확인)
 snap_missing = _parse_assets(raw_assets_missing_summary)
 check("summary가 없어도 예외 없이 기본값(0)으로 처리됨", snap_missing.cash == 0.0)
+
+print("\n[16] PER/PBR 폴백 계산 (yfinance가 값을 안 줄 때 EPS/BPS로 직접 계산)")
+info_full = {"trailingPE": 12.5, "priceToBook": 1.3}
+pe, pe_note, pb, pb_note = _pe_pb_with_fallback(info_full, price=100_000)
+check("원본 trailingPE가 있으면 그대로 사용", pe == 12.5 and pe_note is None)
+check("원본 priceToBook이 있으면 그대로 사용", pb == 1.3 and pb_note is None)
+
+info_trailing_eps_only = {"trailingEps": 5000, "bookValue": 40000}
+pe, pe_note, pb, pb_note = _pe_pb_with_fallback(info_trailing_eps_only, price=100_000)
+check("trailingPE 없으면 trailingEps로 직접 계산 (100000/5000=20.0)", pe == 20.0)
+check("직접 계산했다는 근거(note)가 남음", pe_note is not None and "trailing EPS" in pe_note)
+check("priceToBook 없으면 bookValue로 직접 계산 (100000/40000=2.5)", pb == 2.5)
+check("PBR도 계산 근거가 남음", pb_note is not None)
+
+info_forward_only = {"forwardEps": 4000}
+pe, pe_note, pb, pb_note = _pe_pb_with_fallback(info_forward_only, price=100_000)
+check("trailingEps도 없으면 forwardEps로 폴백 (100000/4000=25.0)", pe == 25.0)
+check("forward 기반이라는 게 note에 명시됨(확정 실적 아님)", "forward" in pe_note.lower())
+
+info_empty = {}
+pe, pe_note, pb, pb_note = _pe_pb_with_fallback(info_empty, price=100_000)
+check("계산할 근거가 아예 없으면 PER도 None", pe is None and pe_note is None)
+check("계산할 근거가 아예 없으면 PBR도 None", pb is None and pb_note is None)
+
+info_no_price = {"trailingEps": 5000}
+pe, pe_note, pb, pb_note = _pe_pb_with_fallback(info_no_price, price=None)
+check("현재가가 없으면 EPS가 있어도 계산 안 함 (None)", pe is None)
 
 print(f"\n{'='*40}\n결과: {PASS} 통과 / {FAIL} 실패\n{'='*40}")
 if FAIL:
