@@ -104,3 +104,35 @@ def build_report_message(verdict, trade_result, perf: dict, toss_snapshot=None, 
         )
 
     return "\n".join(lines)
+
+
+def build_screening_message(candidates: list, universe_size: int) -> str:
+    """core/screener.py의 무료 스크리닝 결과를 텔레그램 메시지로 변환.
+
+    9인 전문가 딥다이브(build_report_message)와 달리 이 리포트는 LLM을 전혀 거치지 않은,
+    순수 숫자 기반 점수라는 걸 메시지 안에서 분명히 밝힌다 - AI가 쓴 코멘트처럼 오해하지
+    않도록 하기 위함이다."""
+    now_kst = datetime.now(ZoneInfo("Asia/Seoul")).strftime("%Y-%m-%d %H:%M:%S")
+    lines = [
+        f"🕒 {now_kst} (KST)",
+        f"🔍 포테이토 길드 무료 스크리닝 (코스피·코스닥 대형주 {universe_size}종목 훑음)",
+        "",
+        "※ 아래는 AI 판단이 아니라 PER/PBR/ROE/RSI 숫자만으로 매긴 규칙 기반 점수입니다.",
+        "   관심 가는 종목은 `python main.py <종목코드>`로 9인 전문가 딥다이브를 따로 돌려보세요.",
+        "",
+    ]
+
+    if not candidates:
+        lines.append("이번 스캔에서는 데이터를 가져올 수 있는 종목이 없었습니다 (네트워크 문제일 수 있음).")
+        return "\n".join(lines)
+
+    for i, c in enumerate(candidates, start=1):
+        price_text = f"{c['price']:,.0f}원" if c.get("price") is not None else "가격 정보 없음"
+        lines.append(f"{i}. {c['name']} ({c['ticker']}) - 점수 {c['score']} / 현재가 {price_text}")
+        if c.get("reasons"):
+            for reason in c["reasons"]:
+                lines.append(f"   - {reason}")
+        else:
+            lines.append("   - 특별히 저평가/과매도로 걸리는 지표는 없음 (중립)")
+
+    return "\n".join(lines)
