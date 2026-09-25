@@ -9,13 +9,15 @@ permissions:
 on:
   schedule:
     # UTC 기준 06:30 = 한국시간 15:30 (장 마감 후). 필요하면 자유롭게 수정하세요.
+    # 예약 실행은 항상 무료 스크리닝(--screen) 모드로 돈다 - 특정 종목 딥다이브(유료)는
+    # 아래 workflow_dispatch로 수동 실행할 때만 tickers를 입력해서 돌린다.
     - cron: "30 6 * * 1-5"
   workflow_dispatch:
     inputs:
       tickers:
-        description: "분석할 종목코드 (공백으로 구분, 예: 005930.KS AAPL)"
-        required: true
-        default: "005930.KS"
+        description: "특정 종목만 딥다이브하려면 종목코드 입력(공백으로 구분, 예: 005930.KS AAPL). 비워두면 무료 스크리닝만 실행"
+        required: false
+        default: ""
 
 jobs:
   run-guild:
@@ -41,12 +43,16 @@ jobs:
           TOSS_CLIENT_ID: ${{ secrets.TOSS_CLIENT_ID }}
           TOSS_CLIENT_SECRET: ${{ secrets.TOSS_CLIENT_SECRET }}
         run: |
-          python main.py ${{ github.event.inputs.tickers || '005930.KS' }}
+          if [ -n "${{ github.event.inputs.tickers }}" ]; then
+            python main.py ${{ github.event.inputs.tickers }}
+          else
+            python main.py --screen
+          fi
 
-      - name: 모의투자 계좌 상태 커밋
+      - name: 계좌 상태 + 웹 대시보드 데이터 커밋
         run: |
           git config user.name "potato-guild-bot"
           git config user.email "actions@github.com"
-          git add data/portfolio.json data/memory.json
-          git diff --cached --quiet || git commit -m "포테이토 계좌 갱신 [skip ci]"
+          git add data/portfolio.json data/memory.json data/screening_latest.json data/verdicts.json
+          git diff --cached --quiet || git commit -m "포테이토 계좌/대시보드 데이터 갱신 [skip ci]"
           git push
