@@ -14,6 +14,7 @@ from core.guildmaster import (
 )
 from core.memory import build_reflection
 from core.potato import MAX_POSITIONS, MIN_CASH_RESERVE_RATIO, execute
+from core.screener import _score_candidate
 from core.toss_client import TossAccountSnapshot, TossHolding, _parse_assets, _to_toss_symbol, find_holding
 
 PASS = 0
@@ -192,6 +193,21 @@ check("계산할 근거가 아예 없으면 PBR도 None", pb is None and pb_note
 info_no_price = {"trailingEps": 5000}
 pe, pe_note, pb, pb_note = _pe_pb_with_fallback(info_no_price, price=None)
 check("현재가가 없으면 EPS가 있어도 계산 안 함 (None)", pe is None)
+
+print("\n[17] 무료 스크리닝 점수 계산 (_score_candidate)")
+score, reasons = _score_candidate(pe_ratio=8, pb_ratio=0.8, roe=0.20, rsi=25)
+check("저PER(2)+저PBR(2)+고ROE(2)+과매도(1) = 7점", score == 7)
+check("근거 문장이 4개(PER/PBR/ROE/RSI 전부) 남음", len(reasons) == 4)
+
+score, _ = _score_candidate(pe_ratio=20, pb_ratio=3, roe=0.03, rsi=80)
+check("고PER+고PBR+저ROE+과매수는 감점만 있어 음수 가능 (-1)", score == -1)
+
+score, reasons = _score_candidate(pe_ratio=None, pb_ratio=None, roe=None, rsi=None)
+check("데이터가 전부 없으면 점수 0, 근거도 없음", score == 0 and reasons == [])
+
+score, reasons = _score_candidate(pe_ratio=12, pb_ratio=None, roe=None, rsi=50)
+check("일부 데이터만 있어도 그 항목만 반영 (PER 준수구간 1점)", score == 1)
+check("중립 RSI(50)는 가점도 감점도 없음", "RSI" not in " ".join(reasons))
 
 print(f"\n{'='*40}\n결과: {PASS} 통과 / {FAIL} 실패\n{'='*40}")
 if FAIL:
