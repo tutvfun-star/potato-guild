@@ -18,6 +18,13 @@
 실패하면 전체 파이프라인을 멈추지 않고 "이 기능만" 건너뛰도록 했다 - 실계좌 조회는
 부가 정보이지 필수 기능이 아니기 때문이다. 만약 실제 실행 결과가 이상하면(예: 보유
 종목이 항상 안 잡힘) raw 응답 로그를 보고 필드명을 맞춰야 할 수 있다.
+
+[2026-09-14] 첫 실행에서 /oauth2/token이 403 Forbidden으로 즉시 거부되는 걸 확인했다.
+가능한 원인 두 가지에 대응했다: (1) python-requests 기본 User-Agent를 WAF가 봇 트래픽으로
+차단했을 가능성 -> 일반 브라우저 User-Agent(_COMMON_HEADERS)를 추가. (2) 4xx는 재시도해도
+바뀌지 않으므로 즉시 실패 처리하고 응답 본문을 그대로 노출(_raise_for_status_verbose)하도록
+바꿔서, 다음에 또 막히면 정확한 원인(자격증명 오류/IP 차단/앱 미승인 등)을 로그에서 바로
+확인할 수 있게 했다.
 """
 import os
 import time
@@ -27,6 +34,16 @@ import requests
 
 TOSS_API_BASE = "https://openapi.tossinvest.com"
 RETRY_BACKOFF_SECONDS = [3, 7, 15]
+
+# python-requests의 기본 User-Agent("python-requests/x.x.x")를 WAF/봇 차단 규칙이
+# 자동화 트래픽으로 판단해서 403을 돌려주는 경우가 실제로 흔하다(금융권 API에서 특히).
+# 일반 브라우저 UA를 붙여서 그 가능성을 먼저 제거해본다.
+_COMMON_HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+    ),
+}
 
 # yfinance 형식 한국 종목 티커(005930.KS)에서 토스 종목 코드(005930)를 뽑아낼 때
 # 떼어낼 접미사들.
@@ -38,12 +55,31 @@ _KR_SUFFIXES = (".KS", ".KQ")
 _token_cache = {"access_token": None, "expires_at": 0.0}
 
 
+class _NonRetryableError(Exception):
+    """4xx(인증/권한 문제)는 재시도해도 결과가 바뀌지 않으므로 즉시 포기하고,
+    나머지(네트워크 오류/5xx)만 재시도 대상으로 삼기 위한 구분용 예외."""
+
+
+def _raise_for_status_verbose(r):
+    """requests의 raise_for_status()는 응답 본문을 담지 않아서 디버깅이 어렵다.
+    상태코드별로 원인을 바로 알 수 있도록 응답 본문까지 포함해서 예외를 던진다."""
+    if 400 <= r.status_code < 500:
+        raise _NonRetryableError(
+            f"{r.status_code} {r.reason} (재시도 불가 - 자격 증명/권한 문제일 가능성): {r.text[:500]}"
+        )
+    if r.status_code >= 500:
+        raise RuntimeError(f"{r.status_code} {r.reason} (일시적 서버 오류로 추정): {r.text[:500]}")
+
+
 def _with_retry(fn, label: str):
-    """간헐적인 네트워크 끊김에 대비한 재시도 래퍼 (다른 모듈들과 동일한 방식)."""
+    """간헐적인 네트워크 끊김/서버 오류에 대비한 재시도 래퍼. 단, 4xx(자격 증명/권한 문제)는
+    재시도해봐야 소용없으므로 즉시 실패 처리한다."""
     last_error = None
     for attempt in range(1, len(RETRY_BACKOFF_SECONDS) + 2):
         try:
             return fn()
+        except _NonRetryableError:
+            raise
         except Exception as e:
             last_error = e
             if attempt <= len(RETRY_BACKOFF_SECONDS):
@@ -118,9 +154,10 @@ def _fetch_access_token() -> str:
                 "client_id": client_id,
                 "client_secret": client_secret,
             },
+            headers=_COMMON_HEADERS,
             timeout=20,
         )
-        r.raise_for_status()
+        _raise_for_status_verbose(r)
         return r.json()
 
     data = _with_retry(_do_request, label="토스 access_token 발급")
@@ -141,10 +178,10 @@ def _fetch_account_seq(access_token: str) -> str:
     def _do_request():
         r = requests.get(
             f"{TOSS_API_BASE}/api/v1/accounts",
-            headers={"Authorization": f"Bearer {access_token}"},
+            headers={**_COMMON_HEADERS, "Authorization": f"Bearer {access_token}"},
             timeout=20,
         )
-        r.raise_for_status()
+        _raise_for_status_verbose(r)
         return r.json()
 
     accounts = _with_retry(_do_request, label="토스 계좌 목록 조회")
@@ -219,12 +256,13 @@ def fetch_account_snapshot() -> "TossAccountSnapshot | None":
             r = requests.get(
                 f"{TOSS_API_BASE}/api/v1/assets",
                 headers={
+                    **_COMMON_HEADERS,
                     "Authorization": f"Bearer {access_token}",
                     "X-Tossinvest-Account": account_seq,
                 },
                 timeout=20,
             )
-            r.raise_for_status()
+            _raise_for_status_verbose(r)
             return r.json()
 
         raw = _with_retry(_do_request, label="토스 실계좌 자산 조회")
