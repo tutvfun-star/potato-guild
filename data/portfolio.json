@@ -16,5 +16,17 @@
       "price": 259500.0,
       "amount": 259500.0
     }
-  ]
+  ],
+  "last_performance": {
+    "cash": 9740500,
+    "total_assets": 10026000,
+    "pnl": 26000,
+    "pnl_pct": 0.26,
+    "positions": {
+      "005930.KS": {
+        "shares": 1,
+        "avg_price": 259500.0
+      }
+    }
+  }
 }
