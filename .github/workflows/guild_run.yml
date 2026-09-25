@@ -53,6 +53,11 @@ jobs:
         run: |
           git config user.name "potato-guild-bot"
           git config user.email "actions@github.com"
-          git add data/portfolio.json data/memory.json data/screening_latest.json data/verdicts.json
+          # 스크리닝만 돌린 날은 data/verdicts.json 등 딥다이브 전용 파일이 아직 없을 수 있다.
+          # git add는 지정한 경로 중 하나라도 없으면 전체가 실패하므로, 파일마다 따로
+          # add하고 없으면 조용히 넘어가게 한다 (|| true).
+          for f in data/portfolio.json data/memory.json data/screening_latest.json data/verdicts.json; do
+            git add "$f" 2>/dev/null || true
+          done
           git diff --cached --quiet || git commit -m "포테이토 계좌/대시보드 데이터 갱신 [skip ci]"
           git push
