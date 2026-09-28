@@ -393,7 +393,7 @@
       html += '<div class="table-wrap"><table><thead><tr><th>종목</th><th>수량</th><th>평단가</th></tr></thead><tbody>';
       tickers.forEach(function (t) {
         const p = positions[t];
-        html += "<tr><td>" + t + "</td><td>" + fmtNum(p.quantity ?? p.qty) + "</td><td>" + fmtNum(p.avg_price) + "원</td></tr>";
+        html += "<tr><td>" + t + "</td><td>" + fmtNum(p.shares) + "</td><td>" + fmtNum(p.avg_price) + "원</td></tr>";
       });
       html += "</tbody></table></div>";
     } else {
