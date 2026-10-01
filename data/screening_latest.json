@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-30T12:54:32.350673+00:00",
+  "generated_at": "2026-10-01T13:45:55.335751+00:00",
   "universe_size": 133,
   "candidates": [
     {
@@ -8,16 +8,16 @@
       "score": 3,
       "reasons": [
         "ROE 43.6% (높은 자본 효율성, 15% 초과)",
-        "RSI 29.88 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 24.34 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 662000.0,
-      "change_pct": -2.79,
+      "price": 673000.0,
+      "change_pct": 1.66,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.4359,
-      "rsi": 29.88
+      "rsi": 24.34
     },
     {
       "ticker": "042660.KS",
@@ -25,16 +25,16 @@
       "score": 3,
       "reasons": [
         "ROE 32.5% (높은 자본 효율성, 15% 초과)",
-        "RSI 29.61 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 20.37 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 78800.0,
-      "change_pct": 0.25,
+      "price": 78500.0,
+      "change_pct": -0.38,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.32529,
-      "rsi": 29.61
+      "rsi": 20.37
     },
     {
       "ticker": "015760.KS",
@@ -42,33 +42,16 @@
       "score": 3,
       "reasons": [
         "ROE 16.6% (높은 자본 효율성, 15% 초과)",
-        "RSI 16.8 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 20.49 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 29950.0,
-      "change_pct": -0.5,
+      "price": 30150.0,
+      "change_pct": 0.67,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.16595,
-      "rsi": 16.8
-    },
-    {
-      "ticker": "006800.KS",
-      "name": "미래에셋증권",
-      "score": 3,
-      "reasons": [
-        "ROE 26.7% (높은 자본 효율성, 15% 초과)",
-        "RSI 18.94 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 30950.0,
-      "change_pct": -0.64,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.26691,
-      "rsi": 18.94
+      "rsi": 20.49
     },
     {
       "ticker": "267250.KS",
@@ -76,16 +59,16 @@
       "score": 3,
       "reasons": [
         "ROE 24.1% (높은 자본 효율성, 15% 초과)",
-        "RSI 26.6 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 18.23 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 202500.0,
-      "change_pct": 0.5,
+      "price": 197500.0,
+      "change_pct": -2.47,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.24139999,
-      "rsi": 26.6
+      "rsi": 18.23
     },
     {
       "ticker": "064350.KS",
@@ -93,16 +76,16 @@
       "score": 3,
       "reasons": [
         "ROE 26.9% (높은 자본 효율성, 15% 초과)",
-        "RSI 16.13 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 19.64 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 111600.0,
-      "change_pct": -0.62,
+      "price": 112500.0,
+      "change_pct": 0.81,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.26948,
-      "rsi": 16.13
+      "rsi": 19.64
     },
     {
       "ticker": "071050.KS",
@@ -110,50 +93,16 @@
       "score": 3,
       "reasons": [
         "ROE 24.3% (높은 자본 효율성, 15% 초과)",
-        "RSI 20.31 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 26.5 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 177000.0,
-      "change_pct": -1.12,
+      "price": 179500.0,
+      "change_pct": 1.41,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.24308,
-      "rsi": 20.31
-    },
-    {
-      "ticker": "039490.KS",
-      "name": "키움증권",
-      "score": 3,
-      "reasons": [
-        "ROE 25.4% (높은 자본 효율성, 15% 초과)",
-        "RSI 25.29 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 251500.0,
-      "change_pct": -1.57,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.25375,
-      "rsi": 25.29
-    },
-    {
-      "ticker": "196170.KQ",
-      "name": "알테오젠",
-      "score": 3,
-      "reasons": [
-        "ROE 35.6% (높은 자본 효율성, 15% 초과)",
-        "RSI 22.22 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 254500.0,
-      "change_pct": 0.39,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.35599,
-      "rsi": 22.22
+      "rsi": 26.5
     },
     {
       "ticker": "214450.KQ",
@@ -161,16 +110,66 @@
       "score": 3,
       "reasons": [
         "ROE 27.3% (높은 자본 효율성, 15% 초과)",
-        "RSI 5.34 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 11.28 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 310500.0,
-      "change_pct": -1.9,
+      "price": 314500.0,
+      "change_pct": 1.29,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.27339,
-      "rsi": 5.34
+      "rsi": 11.28
+    },
+    {
+      "ticker": "257720.KQ",
+      "name": "실리콘투",
+      "score": 3,
+      "reasons": [
+        "ROE 42.2% (높은 자본 효율성, 15% 초과)",
+        "RSI 16.13 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": 38300.0,
+      "change_pct": 0.39,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.42216998,
+      "rsi": 16.13
+    },
+    {
+      "ticker": "145020.KQ",
+      "name": "휴젤",
+      "score": 3,
+      "reasons": [
+        "ROE 16.5% (높은 자본 효율성, 15% 초과)",
+        "RSI 8.78 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": 180600.0,
+      "change_pct": 0.5,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.16532,
+      "rsi": 8.78
+    },
+    {
+      "ticker": "005930.KS",
+      "name": "삼성전자",
+      "score": 2,
+      "reasons": [
+        "ROE 30.8% (높은 자본 효율성, 15% 초과)"
+      ],
+      "price": 276000.0,
+      "change_pct": 2.79,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.30794,
+      "rsi": 53.63
     }
   ]
 }
