@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-16T11:47:44.821616+00:00",
+  "generated_at": "2026-10-19T13:49:18.750570+00:00",
   "universe_size": 133,
   "candidates": [
     {
@@ -8,16 +8,16 @@
       "score": 3,
       "reasons": [
         "ROE 30.8% (높은 자본 효율성, 15% 초과)",
-        "RSI 22.27 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 17.39 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 215500.0,
-      "change_pct": 2.62,
+      "price": 218000.0,
+      "change_pct": 1.16,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.30794,
-      "rsi": 22.27
+      "rsi": 17.39
     },
     {
       "ticker": "000660.KS",
@@ -25,16 +25,16 @@
       "score": 3,
       "reasons": [
         "ROE 92.7% (높은 자본 효율성, 15% 초과)",
-        "RSI 13.78 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 11.86 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 1272000.0,
-      "change_pct": 0.79,
+      "price": 1277000.0,
+      "change_pct": 0.39,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.92679,
-      "rsi": 13.78
+      "rsi": 11.86
     },
     {
       "ticker": "402340.KS",
@@ -42,16 +42,16 @@
       "score": 3,
       "reasons": [
         "ROE 84.9% (높은 자본 효율성, 15% 초과)",
-        "RSI 21.99 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 14.04 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 784000.0,
-      "change_pct": 2.48,
+      "price": 780000.0,
+      "change_pct": -0.51,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.84873,
-      "rsi": 21.99
+      "rsi": 14.04
     },
     {
       "ticker": "329180.KS",
@@ -59,16 +59,16 @@
       "score": 3,
       "reasons": [
         "ROE 30.1% (높은 자본 효율성, 15% 초과)",
-        "RSI 7.38 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 7.93 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 351500.0,
-      "change_pct": -0.28,
+      "price": 345500.0,
+      "change_pct": -1.71,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.30089,
-      "rsi": 7.38
+      "rsi": 7.93
     },
     {
       "ticker": "034730.KS",
@@ -76,16 +76,16 @@
       "score": 3,
       "reasons": [
         "ROE 29.4% (높은 자본 효율성, 15% 초과)",
-        "RSI 22.66 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 14.87 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 456500.0,
-      "change_pct": 4.46,
+      "price": 457500.0,
+      "change_pct": 0.22,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.29365999,
-      "rsi": 22.66
+      "rsi": 14.87
     },
     {
       "ticker": "010120.KS",
@@ -93,16 +93,16 @@
       "score": 3,
       "reasons": [
         "ROE 18.4% (높은 자본 효율성, 15% 초과)",
-        "RSI 18.66 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 25.86 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 158600.0,
-      "change_pct": 1.86,
+      "price": 164600.0,
+      "change_pct": 3.78,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.18448,
-      "rsi": 18.66
+      "rsi": 25.86
     },
     {
       "ticker": "298040.KS",
@@ -110,16 +110,16 @@
       "score": 3,
       "reasons": [
         "ROE 23.4% (높은 자본 효율성, 15% 초과)",
-        "RSI 14.55 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 15.22 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 1926000.0,
-      "change_pct": 5.77,
+      "price": 1936000.0,
+      "change_pct": 0.52,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.23448,
-      "rsi": 14.55
+      "rsi": 15.22
     },
     {
       "ticker": "267260.KS",
@@ -127,16 +127,16 @@
       "score": 3,
       "reasons": [
         "ROE 43.6% (높은 자본 효율성, 15% 초과)",
-        "RSI 16.78 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 19.6 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 516000.0,
-      "change_pct": 5.95,
+      "price": 525000.0,
+      "change_pct": 1.74,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.4359,
-      "rsi": 16.78
+      "rsi": 19.6
     },
     {
       "ticker": "042660.KS",
@@ -144,16 +144,16 @@
       "score": 3,
       "reasons": [
         "ROE 32.5% (높은 자본 효율성, 15% 초과)",
-        "RSI 15.7 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 16.52 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 65000.0,
-      "change_pct": 4.17,
+      "price": 64200.0,
+      "change_pct": -1.23,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.32529,
-      "rsi": 15.7
+      "rsi": 16.52
     },
     {
       "ticker": "009540.KS",
@@ -161,16 +161,16 @@
       "score": 3,
       "reasons": [
         "ROE 26.9% (높은 자본 효율성, 15% 초과)",
-        "RSI 5.39 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 13.25 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 265000.0,
-      "change_pct": 0.76,
+      "price": 271500.0,
+      "change_pct": 2.45,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.26908,
-      "rsi": 5.39
+      "rsi": 13.25
     }
   ]
 }
