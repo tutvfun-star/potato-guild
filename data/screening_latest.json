@@ -1,74 +1,23 @@
 {
-  "generated_at": "2026-10-27T12:35:25.298367+00:00",
+  "generated_at": "2026-10-28T13:22:49.554723+00:00",
   "universe_size": 133,
   "candidates": [
-    {
-      "ticker": "005930.KS",
-      "name": "삼성전자",
-      "score": 3,
-      "reasons": [
-        "ROE 30.8% (높은 자본 효율성, 15% 초과)",
-        "RSI 27.27 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 222000.0,
-      "change_pct": 4.23,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.30794,
-      "rsi": 27.27
-    },
-    {
-      "ticker": "000660.KS",
-      "name": "SK하이닉스",
-      "score": 3,
-      "reasons": [
-        "ROE 92.7% (높은 자본 효율성, 15% 초과)",
-        "RSI 24.41 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 1341000.0,
-      "change_pct": 5.18,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.92679,
-      "rsi": 24.41
-    },
-    {
-      "ticker": "402340.KS",
-      "name": "SK스퀘어",
-      "score": 3,
-      "reasons": [
-        "ROE 84.9% (높은 자본 효율성, 15% 초과)",
-        "RSI 22.84 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 828000.0,
-      "change_pct": 7.67,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.84873,
-      "rsi": 22.84
-    },
     {
       "ticker": "012450.KS",
       "name": "한화에어로스페이스",
       "score": 3,
       "reasons": [
         "ROE 20.8% (높은 자본 효율성, 15% 초과)",
-        "RSI 22.81 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 28.83 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 768000.0,
-      "change_pct": 1.05,
+      "price": 787000.0,
+      "change_pct": 2.47,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.20808001,
-      "rsi": 22.81
+      "rsi": 28.83
     },
     {
       "ticker": "329180.KS",
@@ -76,33 +25,16 @@
       "score": 3,
       "reasons": [
         "ROE 30.1% (높은 자본 효율성, 15% 초과)",
-        "RSI 5.21 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 5.79 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 291500.0,
-      "change_pct": 0.69,
+      "price": 285500.0,
+      "change_pct": -2.06,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.30089,
-      "rsi": 5.21
-    },
-    {
-      "ticker": "010120.KS",
-      "name": "LS ELECTRIC",
-      "score": 3,
-      "reasons": [
-        "ROE 18.4% (높은 자본 효율성, 15% 초과)",
-        "RSI 22.85 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 158100.0,
-      "change_pct": 3.4,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.18448,
-      "rsi": 22.85
+      "rsi": 5.79
     },
     {
       "ticker": "298040.KS",
@@ -110,16 +42,16 @@
       "score": 3,
       "reasons": [
         "ROE 23.4% (높은 자본 효율성, 15% 초과)",
-        "RSI 17.14 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 25.9 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 1914000.0,
-      "change_pct": 3.29,
+      "price": 1998000.0,
+      "change_pct": 4.39,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.23448,
-      "rsi": 17.14
+      "rsi": 25.9
     },
     {
       "ticker": "267260.KS",
@@ -127,16 +59,16 @@
       "score": 3,
       "reasons": [
         "ROE 43.6% (높은 자본 효율성, 15% 초과)",
-        "RSI 15.53 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 22.0 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 450000.0,
-      "change_pct": 0.67,
+      "price": 462500.0,
+      "change_pct": 2.78,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.4359,
-      "rsi": 15.53
+      "rsi": 22.0
     },
     {
       "ticker": "042660.KS",
@@ -144,16 +76,16 @@
       "score": 3,
       "reasons": [
         "ROE 32.5% (높은 자본 효율성, 15% 초과)",
-        "RSI 10.97 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 11.97 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 53000.0,
-      "change_pct": 0.0,
+      "price": 52500.0,
+      "change_pct": -0.94,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.32529,
-      "rsi": 10.97
+      "rsi": 11.97
     },
     {
       "ticker": "009540.KS",
@@ -161,16 +93,84 @@
       "score": 3,
       "reasons": [
         "ROE 26.9% (높은 자본 효율성, 15% 초과)",
-        "RSI 16.36 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 18.42 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 246500.0,
-      "change_pct": 1.44,
+      "price": 241500.0,
+      "change_pct": -2.03,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.26908,
-      "rsi": 16.36
+      "rsi": 18.42
+    },
+    {
+      "ticker": "042700.KS",
+      "name": "한미반도체",
+      "score": 3,
+      "reasons": [
+        "ROE 33.2% (높은 자본 효율성, 15% 초과)",
+        "RSI 29.77 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": 203500.0,
+      "change_pct": 6.32,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.33244,
+      "rsi": 29.77
+    },
+    {
+      "ticker": "010950.KS",
+      "name": "S-Oil",
+      "score": 3,
+      "reasons": [
+        "ROE 16.3% (높은 자본 효율성, 15% 초과)",
+        "RSI 16.01 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": 125600.0,
+      "change_pct": -0.63,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.16327,
+      "rsi": 16.01
+    },
+    {
+      "ticker": "079550.KS",
+      "name": "LIG넥스원",
+      "score": 3,
+      "reasons": [
+        "ROE 17.6% (높은 자본 효율성, 15% 초과)",
+        "RSI 21.15 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": 449000.0,
+      "change_pct": 1.35,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.17643,
+      "rsi": 21.15
+    },
+    {
+      "ticker": "267250.KS",
+      "name": "HD현대",
+      "score": 3,
+      "reasons": [
+        "ROE 24.1% (높은 자본 효율성, 15% 초과)",
+        "RSI 20.08 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": 145100.0,
+      "change_pct": 6.53,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.24139999,
+      "rsi": 20.08
     }
   ]
 }
