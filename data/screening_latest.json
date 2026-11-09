@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T14:31:28.604810+00:00",
+  "generated_at": "2026-11-09T16:45:37.456266+00:00",
   "universe_size": 133,
   "candidates": [
     {
@@ -8,16 +8,16 @@
       "score": 3,
       "reasons": [
         "ROE 20.8% (높은 자본 효율성, 15% 초과)",
-        "RSI 20.62 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 27.65 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 660000.0,
-      "change_pct": -2.94,
+      "price": NaN,
+      "change_pct": NaN,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.20808001,
-      "rsi": 20.62
+      "rsi": 27.65
     },
     {
       "ticker": "329180.KS",
@@ -25,33 +25,16 @@
       "score": 3,
       "reasons": [
         "ROE 30.1% (높은 자본 효율성, 15% 초과)",
-        "RSI 16.26 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 20.94 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 262500.0,
-      "change_pct": -3.14,
+      "price": NaN,
+      "change_pct": NaN,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.30089,
-      "rsi": 16.26
-    },
-    {
-      "ticker": "010120.KS",
-      "name": "LS ELECTRIC",
-      "score": 3,
-      "reasons": [
-        "ROE 18.4% (높은 자본 효율성, 15% 초과)",
-        "RSI 29.14 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 116500.0,
-      "change_pct": -10.25,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.18448,
-      "rsi": 29.14
+      "rsi": 20.94
     },
     {
       "ticker": "267260.KS",
@@ -59,16 +42,16 @@
       "score": 3,
       "reasons": [
         "ROE 41.2% (높은 자본 효율성, 15% 초과)",
-        "RSI 19.1 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 22.37 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 366500.0,
-      "change_pct": -8.72,
+      "price": NaN,
+      "change_pct": NaN,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.41205,
-      "rsi": 19.1
+      "rsi": 22.37
     },
     {
       "ticker": "042660.KS",
@@ -76,33 +59,16 @@
       "score": 3,
       "reasons": [
         "ROE 32.5% (높은 자본 효율성, 15% 초과)",
-        "RSI 19.53 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 24.16 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 47350.0,
-      "change_pct": -3.86,
+      "price": NaN,
+      "change_pct": NaN,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.32529,
-      "rsi": 19.53
-    },
-    {
-      "ticker": "042700.KS",
-      "name": "한미반도체",
-      "score": 3,
-      "reasons": [
-        "ROE 33.2% (높은 자본 효율성, 15% 초과)",
-        "RSI 29.92 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 161400.0,
-      "change_pct": -4.55,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.33244,
-      "rsi": 29.92
+      "rsi": 24.16
     },
     {
       "ticker": "079550.KS",
@@ -110,16 +76,16 @@
       "score": 3,
       "reasons": [
         "ROE 17.6% (높은 자본 효율성, 15% 초과)",
-        "RSI 10.26 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 11.99 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 326000.0,
-      "change_pct": -9.07,
+      "price": NaN,
+      "change_pct": NaN,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.17643,
-      "rsi": 10.26
+      "rsi": 11.99
     },
     {
       "ticker": "267250.KS",
@@ -127,16 +93,16 @@
       "score": 3,
       "reasons": [
         "ROE 24.1% (높은 자본 효율성, 15% 초과)",
-        "RSI 25.38 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 29.84 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 124100.0,
-      "change_pct": -4.46,
+      "price": NaN,
+      "change_pct": NaN,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.24139999,
-      "rsi": 25.38
+      "rsi": 29.84
     },
     {
       "ticker": "064350.KS",
@@ -144,33 +110,67 @@
       "score": 3,
       "reasons": [
         "ROE 24.8% (높은 자본 효율성, 15% 초과)",
-        "RSI 21.03 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 28.96 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 71500.0,
-      "change_pct": -5.17,
+      "price": NaN,
+      "change_pct": NaN,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.24784,
-      "rsi": 21.03
+      "rsi": 28.96
     },
     {
-      "ticker": "005830.KS",
-      "name": "DB손해보험",
+      "ticker": "071050.KS",
+      "name": "한국금융지주",
       "score": 3,
       "reasons": [
-        "ROE 15.8% (높은 자본 효율성, 15% 초과)",
-        "RSI 29.98 (과매도 구간, 저가 매수 기회 가능성)"
+        "ROE 24.3% (높은 자본 효율성, 15% 초과)",
+        "RSI 26.27 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 171100.0,
-      "change_pct": -4.52,
+      "price": NaN,
+      "change_pct": NaN,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
-      "roe": 0.15829,
-      "rsi": 29.98
+      "roe": 0.24308,
+      "rsi": 26.27
+    },
+    {
+      "ticker": "353200.KS",
+      "name": "대덕전자",
+      "score": 3,
+      "reasons": [
+        "ROE 16.6% (높은 자본 효율성, 15% 초과)",
+        "RSI 18.86 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": NaN,
+      "change_pct": NaN,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.16641001,
+      "rsi": 18.86
+    },
+    {
+      "ticker": "240810.KQ",
+      "name": "원익IPS",
+      "score": 3,
+      "reasons": [
+        "ROE 17.5% (높은 자본 효율성, 15% 초과)",
+        "RSI 23.44 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": NaN,
+      "change_pct": NaN,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.17499,
+      "rsi": 23.44
     }
   ]
 }
