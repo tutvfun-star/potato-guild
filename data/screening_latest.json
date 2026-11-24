@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-23T18:38:18.571882+00:00",
+  "generated_at": "2026-11-24T18:07:19.295590+00:00",
   "universe_size": 133,
   "candidates": [
     {
@@ -8,16 +8,16 @@
       "score": 3,
       "reasons": [
         "ROE 41.6% (높은 자본 효율성, 15% 초과)",
-        "RSI 26.51 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 27.61 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 183100.0,
-      "change_pct": -7.01,
+      "price": 177500.0,
+      "change_pct": -3.06,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.41577,
-      "rsi": 26.51
+      "rsi": 27.61
     },
     {
       "ticker": "000660.KS",
@@ -25,16 +25,16 @@
       "score": 3,
       "reasons": [
         "ROE 92.5% (높은 자본 효율성, 15% 초과)",
-        "RSI 28.08 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 29.75 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 1113000.0,
-      "change_pct": -5.92,
+      "price": 1085000.0,
+      "change_pct": -2.52,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.92541003,
-      "rsi": 28.08
+      "rsi": 29.75
     },
     {
       "ticker": "402340.KS",
@@ -42,16 +42,33 @@
       "score": 3,
       "reasons": [
         "ROE 84.9% (높은 자본 효율성, 15% 초과)",
-        "RSI 24.77 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 27.79 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 677000.0,
-      "change_pct": -8.39,
+      "price": 680000.0,
+      "change_pct": 0.44,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.84873,
-      "rsi": 24.77
+      "rsi": 27.79
+    },
+    {
+      "ticker": "207940.KS",
+      "name": "삼성바이오로직스",
+      "score": 3,
+      "reasons": [
+        "ROE 16.7% (높은 자본 효율성, 15% 초과)",
+        "RSI 28.42 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": 1288000.0,
+      "change_pct": -4.94,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.16715,
+      "rsi": 28.42
     },
     {
       "ticker": "329180.KS",
@@ -59,16 +76,16 @@
       "score": 3,
       "reasons": [
         "ROE 29.2% (높은 자본 효율성, 15% 초과)",
-        "RSI 27.22 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 25.0 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 247000.0,
-      "change_pct": -5.54,
+      "price": 238500.0,
+      "change_pct": -3.44,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.29247,
-      "rsi": 27.22
+      "rsi": 25.0
     },
     {
       "ticker": "010120.KS",
@@ -76,16 +93,16 @@
       "score": 3,
       "reasons": [
         "ROE 19.9% (높은 자본 효율성, 15% 초과)",
-        "RSI 22.0 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 24.91 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 109700.0,
-      "change_pct": -9.19,
+      "price": 110200.0,
+      "change_pct": 0.46,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.19916001,
-      "rsi": 22.0
+      "rsi": 24.91
     },
     {
       "ticker": "042660.KS",
@@ -93,16 +110,33 @@
       "score": 3,
       "reasons": [
         "ROE 30.2% (높은 자본 효율성, 15% 초과)",
-        "RSI 17.35 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 16.43 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 42100.0,
-      "change_pct": -6.44,
+      "price": 39900.0,
+      "change_pct": -5.23,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.30212,
-      "rsi": 17.35
+      "rsi": 16.43
+    },
+    {
+      "ticker": "009540.KS",
+      "name": "한국조선해양",
+      "score": 3,
+      "reasons": [
+        "ROE 25.8% (높은 자본 효율성, 15% 초과)",
+        "RSI 18.84 (과매도 구간, 저가 매수 기회 가능성)"
+      ],
+      "price": 213500.0,
+      "change_pct": -4.04,
+      "pe_ratio": null,
+      "pe_ratio_note": null,
+      "pb_ratio": null,
+      "pb_ratio_note": null,
+      "roe": 0.25823,
+      "rsi": 18.84
     },
     {
       "ticker": "006800.KS",
@@ -110,16 +144,16 @@
       "score": 3,
       "reasons": [
         "ROE 26.7% (높은 자본 효율성, 15% 초과)",
-        "RSI 15.1 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 15.32 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 18960.0,
-      "change_pct": -5.67,
+      "price": 18240.0,
+      "change_pct": -3.8,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.26691,
-      "rsi": 15.1
+      "rsi": 15.32
     },
     {
       "ticker": "010950.KS",
@@ -127,50 +161,16 @@
       "score": 3,
       "reasons": [
         "ROE 28.9% (높은 자본 효율성, 15% 초과)",
-        "RSI 15.14 (과매도 구간, 저가 매수 기회 가능성)"
+        "RSI 19.94 (과매도 구간, 저가 매수 기회 가능성)"
       ],
-      "price": 97300.0,
-      "change_pct": -3.66,
+      "price": 93300.0,
+      "change_pct": -4.11,
       "pe_ratio": null,
       "pe_ratio_note": null,
       "pb_ratio": null,
       "pb_ratio_note": null,
       "roe": 0.28862,
-      "rsi": 15.14
-    },
-    {
-      "ticker": "267250.KS",
-      "name": "HD현대",
-      "score": 3,
-      "reasons": [
-        "ROE 25.1% (높은 자본 효율성, 15% 초과)",
-        "RSI 17.25 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 113000.0,
-      "change_pct": -4.32,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.25129,
-      "rsi": 17.25
-    },
-    {
-      "ticker": "064350.KS",
-      "name": "현대로템",
-      "score": 3,
-      "reasons": [
-        "ROE 24.8% (높은 자본 효율성, 15% 초과)",
-        "RSI 23.12 (과매도 구간, 저가 매수 기회 가능성)"
-      ],
-      "price": 61600.0,
-      "change_pct": -7.51,
-      "pe_ratio": null,
-      "pe_ratio_note": null,
-      "pb_ratio": null,
-      "pb_ratio_note": null,
-      "roe": 0.24786,
-      "rsi": 23.12
+      "rsi": 19.94
     }
   ]
 }
